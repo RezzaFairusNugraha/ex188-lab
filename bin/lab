@@ -1,0 +1,393 @@
+#!/usr/bin/env bash
+# `lab` — Unified CLI for the Red Hat EX188 (RHEL 10 + Podman v5) Hands-On Practice Lab Suite.
+set -euo pipefail
+
+# Resolve symlinks so `~/bin/lab` or `/usr/local/bin/lab` finds `lib/` accurately
+SOURCE_PATH="${BASH_SOURCE[0]}"
+while [[ -L "${SOURCE_PATH}" ]]; do
+    LINK_DIR="$(cd -P "$(dirname "${SOURCE_PATH}")" && pwd)"
+    SOURCE_PATH="$(readlink "${SOURCE_PATH}")"
+    [[ "${SOURCE_PATH}" != /* ]] && SOURCE_PATH="${LINK_DIR}/${SOURCE_PATH}"
+done
+CLI_DIR="$(cd -P "$(dirname "${SOURCE_PATH}")" && pwd)"
+ROOT_DIR="$(cd -P "${CLI_DIR}/.." && pwd)"
+
+# shellcheck source=lib/common.sh
+source "${ROOT_DIR}/lib/common.sh"
+# shellcheck source=lib/state.sh
+source "${ROOT_DIR}/lib/state.sh"
+# shellcheck source=lib/grade.sh
+source "${ROOT_DIR}/lib/grade.sh"
+# shellcheck source=lib/registry.sh
+source "${ROOT_DIR}/lib/registry.sh"
+# shellcheck source=lib/exam.sh
+source "${ROOT_DIR}/lib/exam.sh"
+
+usage() {
+    cat <<EOF
+${C_BOLD}${C_CYAN}EX188 Hands-On Practice Lab CLI (RHEL 10 + Podman v5)${C_RESET}
+
+${C_BOLD}USAGE:${C_RESET}
+  lab list [domain]                     List tasks with ID, domain, difficulty, points, and status
+  lab start <task-id> [--seed [S]]      Run task setup and print the exam-style task statement
+  lab start --random [domain] [--seed]  Pick a random task (optionally filtered by domain)
+  lab start --weak [--seed]             Pick the task you have failed most often
+  lab grade [task-id]                   Grade final system state (defaults to active task)
+  lab hint <task-id> [1|2|3]            Show progressive hint (1=nudge, 2=approach, 3=commands)
+  lab solution <task-id> [--yes]        Reveal full solution and explanation (warns first)
+  lab reset <task-id>                   Clean task artifacts and restore clean baseline
+  lab reset --all                       Clean all lab containers, units, active tasks, and exam locks
+  lab stats                             Show domain progress, pass rate, and weakest objectives
+  lab exam <1..5>                       Start full 150-minute, 300-point mock exam (locks hints)
+  lab exam grade                        Grade active mock exam (passing = 210/300, 70%)
+  lab exam check-reboot                 Verify post-reboot service & container persistence
+EOF
+}
+
+resolve_target_task() {
+    local maybe_id="${1:-}"
+    if [[ -n "${maybe_id}" ]]; then
+        printf '%s\n' "${maybe_id}"
+        return 0
+    fi
+    state_init
+    if command -v jq >/dev/null 2>&1; then
+        local cur
+        cur="$(jq -r '.current_task // empty' "${LAB_PROGRESS_FILE}" 2>/dev/null || true)"
+        if [[ -n "${cur}" ]]; then
+            printf '%s\n' "${cur}"
+            return 0
+        fi
+    fi
+    die "No task-id specified and no active task recorded. Run 'lab list' or 'lab start <task-id>'."
+}
+
+format_status_badge() {
+    local st="$1"
+    case "${st}" in
+        passed)     printf '%s%-11s%s' "${C_GREEN}${C_BOLD}" "passed" "${C_RESET}" ;;
+        failed)     printf '%s%-11s%s' "${C_RED}${C_BOLD}" "failed" "${C_RESET}" ;;
+        in_progress) printf '%s%-11s%s' "${C_YELLOW}" "in_progress" "${C_RESET}" ;;
+        *)          printf '%s%-11s%s' "${C_DIM}" "not started" "${C_RESET}" ;;
+    esac
+}
+
+cmd_list() {
+    local domain_filter="${1:-}"
+    state_init
+    log_header "EX188 Lab Task Bank${domain_filter:+ (Filter: ${domain_filter})}"
+    printf '%-7s %-20s %-8s %6s %-11s %s\n' "ID" "DOMAIN" "DIFF" "POINTS" "STATUS" "TITLE"
+    hr
+
+    local count=0
+    local tdir tid dom diff pts title st
+    while IFS= read -r tdir; do
+        [[ -z "${tdir}" ]] && continue
+        tid="$(meta_get "${tdir}/meta.yaml" id)"
+        dom="$(meta_get "${tdir}/meta.yaml" domain)"
+        diff="$(meta_get "${tdir}/meta.yaml" difficulty)"
+        pts="$(meta_get "${tdir}/meta.yaml" points)"
+        title="$(meta_get "${tdir}/meta.yaml" title)"
+        st="$(state_get_task_status "${tid}")"
+        printf '%-7s %-20s %-8s %6s ' "${tid}" "${dom}" "${diff}" "${pts}"
+        format_status_badge "${st}"
+        printf ' %s\n' "${title}"
+        count=$(( count + 1 ))
+    done < <(list_all_task_dirs "${domain_filter}")
+
+    hr
+    printf 'Total tasks listed: %s%d%s\n' "${C_BOLD}" "${count}" "${C_RESET}"
+}
+
+cmd_start() {
+    local mode="id"
+    local target=""
+    local domain_filter=""
+    local seed_val="default"
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --random)
+                mode="random"
+                shift
+                if [[ $# -gt 0 && "$1" != --* ]]; then
+                    domain_filter="$1"
+                    shift
+                fi
+                ;;
+            --weak)
+                mode="weak"
+                shift
+                ;;
+            --seed)
+                shift
+                if [[ $# -gt 0 && "$1" != --* ]]; then
+                    seed_val="$1"
+                    shift
+                else
+                    seed_val="random"
+                fi
+                ;;
+            --seed=*)
+                seed_val="${1#--seed=}"
+                shift
+                ;;
+            *)
+                target="$1"
+                shift
+                ;;
+        esac
+    done
+
+    local tdir=""
+    if [[ "${mode}" == "random" ]]; then
+        local candidates=()
+        while IFS= read -r line; do
+            [[ -n "${line}" ]] && candidates+=("${line}")
+        done < <(list_all_task_dirs "${domain_filter}")
+        [[ "${#candidates[@]}" -gt 0 ]] || die "No tasks matched domain filter '${domain_filter}'."
+        local ridx=$(( RANDOM % ${#candidates[@]} ))
+        tdir="${candidates[$ridx]}"
+    elif [[ "${mode}" == "weak" ]]; then
+        state_init
+        state_require_jq
+        local weak_id
+        weak_id="$(jq -r '
+            [.tasks | to_entries[] | select(.value.failures > 0)]
+            | sort_by(-.value.failures, .value.passes)
+            | .[0].key // empty
+        ' "${LAB_PROGRESS_FILE}")"
+        if [[ -n "${weak_id}" ]]; then
+            tdir="$(find_task_dir "${weak_id}")" || die "Recorded task '${weak_id}' no longer exists."
+            log_info "Selected weakest task '${weak_id}' based on failure history."
+        else
+            log_info "No failed tasks recorded yet; picking a random unpassed task..."
+            local unpassed=()
+            local cand cid cst
+            while IFS= read -r cand; do
+                [[ -z "${cand}" ]] && continue
+                cid="$(meta_get "${cand}/meta.yaml" id)"
+                cst="$(state_get_task_status "${cid}")"
+                [[ "${cst}" != "passed" ]] && unpassed+=("${cand}")
+            done < <(list_all_task_dirs "")
+            [[ "${#unpassed[@]}" -gt 0 ]] || die "All tasks have been passed! Use 'lab start --random --seed' for fresh variations."
+            tdir="${unpassed[$(( RANDOM % ${#unpassed[@]} ))]}"
+        fi
+    else
+        [[ -n "${target}" ]] || die "Usage: lab start <task-id> [--seed [value]]"
+        tdir="$(find_task_dir "${target}")" || die "Task '${target}' not found. Run 'lab list' to view task IDs."
+    fi
+
+    local tid title diff pts mins
+    tid="$(meta_get "${tdir}/meta.yaml" id)"
+    title="$(meta_get "${tdir}/meta.yaml" title)"
+    diff="$(meta_get "${tdir}/meta.yaml" difficulty)"
+    pts="$(meta_get "${tdir}/meta.yaml" points)"
+    mins="$(meta_get "${tdir}/meta.yaml" est_minutes)"
+
+    log_header "Task ${tid}: ${title}"
+    printf '%sDifficulty:%s %-8s | %sPoints:%s %-4s | %sEst. Time:%s %s min\n' \
+        "${C_BOLD}" "${C_RESET}" "${diff}" "${C_BOLD}" "${C_RESET}" "${pts}" "${C_BOLD}" "${C_RESET}" "${mins}"
+    hr
+
+    export LAB_SEED="${seed_val}"
+    log_info "Running environment setup for task ${tid}..."
+    bash "${tdir}/setup.sh"
+    state_set_current_task "${tid}"
+    cp "${tdir}/task.md" "${LAB_DATA_DIR}/current-task.md"
+
+    printf '\n'
+    cat "${tdir}/task.md"
+    seed_print_overrides "${tid}"
+    hr
+    log_info "When finished, run: lab grade ${tid}  |  Need a nudge? lab hint ${tid} 1"
+}
+
+cmd_grade() {
+    local tid
+    tid="$(resolve_target_task "${1:-}")"
+    local tdir
+    tdir="$(find_task_dir "${tid}")" || die "Task '${tid}' not found."
+    bash "${tdir}/grade.sh"
+}
+
+cmd_hint() {
+    exam_assert_unlocked
+    local tid=""
+    local level="1"
+    if [[ $# -eq 1 && "$1" =~ ^[123]$ ]]; then
+        tid="$(resolve_target_task "")"
+        level="$1"
+    else
+        tid="$(resolve_target_task "${1:-}")"
+        level="${2:-1}"
+    fi
+    [[ "${level}" =~ ^[123]$ ]] || die "Hint level must be 1 (nudge), 2 (approach), or 3 (key commands)."
+
+    local tdir
+    tdir="$(find_task_dir "${tid}")" || die "Task '${tid}' not found."
+    local hfile="${tdir}/hints.md"
+    [[ -f "${hfile}" ]] || die "No hints.md found for task '${tid}'."
+
+    log_header "Hint (Up to Level ${level}/3) — Task ${tid}"
+    awk -v max_lvl="${level}" '
+        /^## Level [0-9]+/ {
+            lvl = $3
+            gsub(/[^0-9]/, "", lvl)
+            show = (lvl + 0 <= max_lvl + 0)
+        }
+        show { print }
+    ' "${hfile}"
+    seed_print_overrides "${tid}"
+    hr
+    if [[ "${level}" -lt 3 ]]; then
+        log_info "For more detail, run: lab hint ${tid} $(( level + 1 ))"
+    fi
+}
+
+cmd_solution() {
+    exam_assert_unlocked
+    local tid=""
+    local auto_yes=0
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -y|--yes) auto_yes=1; shift ;;
+            *) tid="$1"; shift ;;
+        esac
+    done
+    tid="$(resolve_target_task "${tid}")"
+    local tdir
+    tdir="$(find_task_dir "${tid}")" || die "Task '${tid}' not found."
+
+    if [[ "${auto_yes}" -eq 0 && -t 0 ]]; then
+        printf '%s[WARNING]%s Viewing the full solution reduces exam retention. Try `lab hint %s 1..3` first.\n' \
+            "${C_YELLOW}${C_BOLD}" "${C_RESET}" "${tid}"
+        read -r -p "Reveal full solution for task ${tid}? [y/N]: " ans
+        case "${ans}" in
+            y|Y|yes|YES) ;;
+            *) log_info "Aborted. Keep practicing!"; return 0 ;;
+        esac
+    fi
+
+    log_header "Official Solution & Explanation — Task ${tid}"
+    cat "${tdir}/solution.md"
+    seed_print_overrides "${tid}"
+}
+
+cmd_reset() {
+    local arg="${1:-}"
+    [[ -n "${arg}" ]] || die "Usage: lab reset <task-id> | lab reset --all"
+
+    if [[ "${arg}" == "--all" ]]; then
+        log_header "Resetting Entire EX188 Practice Environment"
+        local tdir
+        while IFS= read -r tdir; do
+            [[ -f "${tdir}/reset.sh" ]] && bash "${tdir}/reset.sh" >/dev/null 2>&1 || true
+        done < <(list_all_task_dirs "")
+
+        local edir
+        for edir in "${LAB_EXAMS_DIR}"/mock-*; do
+            [[ -f "${edir}/reset.sh" ]] && bash "${edir}/reset.sh" >/dev/null 2>&1 || true
+        done
+
+        podman pod rm -fa >/dev/null 2>&1 || true
+        podman rm -fa >/dev/null 2>&1 || true
+        podman volume prune -f >/dev/null 2>&1 || true
+        podman network prune -f >/dev/null 2>&1 || true
+        rm -f "${HOME}/.config/containers/systemd/"*.{container,pod,kube,volume,network} 2>/dev/null || true
+        systemctl --user daemon-reload >/dev/null 2>&1 || true
+        rm -rf "${LAB_ACTIVE_DIR:?}"/* "${EXAM_SESSION_FILE}" "${HOME}/workspace/"* 2>/dev/null || true
+        log_ok "All lab tasks, user containers, Quadlet units, and active exam locks have been cleaned."
+        return 0
+    fi
+
+    local tdir tid
+    tdir="$(find_task_dir "${arg}")" || die "Task '${arg}' not found."
+    tid="$(meta_get "${tdir}/meta.yaml" id)"
+    log_info "Resetting task ${tid}..."
+    bash "${tdir}/reset.sh"
+    state_reset_task_active "${tid}"
+    log_ok "Task ${tid} has been reset to a clean baseline."
+}
+
+cmd_stats() {
+    state_init
+    state_require_jq
+    log_header "EX188 Practice Progress & Analytics"
+    printf '%-22s %7s %8s %8s %10s %10s\n' "DOMAIN" "TOTAL" "PASSED" "FAILED" "ATTEMPTS" "COMPLETION"
+    hr
+
+    local grand_total=0 grand_passed=0 grand_failed=0 grand_attempts=0
+    local d dom d_tot d_pass d_fail d_att tdir tid st att
+    for d in "${LAB_TASKS_DIR}"/*; do
+        [[ -d "${d}" ]] || continue
+        dom="$(basename "${d}")"
+        d_tot=0; d_pass=0; d_fail=0; d_att=0
+        for tdir in "${d}"/*; do
+            [[ -f "${tdir}/meta.yaml" ]] || continue
+            tid="$(meta_get "${tdir}/meta.yaml" id)"
+            d_tot=$(( d_tot + 1 ))
+            st="$(jq -r --arg t "${tid}" '.tasks[$t].status // "not_started"' "${LAB_PROGRESS_FILE}")"
+            att="$(jq -r --arg t "${tid}" '.tasks[$t].attempts // 0' "${LAB_PROGRESS_FILE}")"
+            d_att=$(( d_att + att ))
+            [[ "${st}" == "passed" ]] && d_pass=$(( d_pass + 1 ))
+            [[ "${st}" == "failed" ]] && d_fail=$(( d_fail + 1 ))
+        done
+        local pct=0
+        [[ "${d_tot}" -gt 0 ]] && pct=$(( (d_pass * 100) / d_tot ))
+        printf '%-22s %7d %8d %8d %10d %9d%%\n' "${dom}" "${d_tot}" "${d_pass}" "${d_fail}" "${d_att}" "${pct}"
+        grand_total=$(( grand_total + d_tot ))
+        grand_passed=$(( grand_passed + d_pass ))
+        grand_failed=$(( grand_failed + d_fail ))
+        grand_attempts=$(( grand_attempts + d_att ))
+    done
+
+    hr
+    local gpct=0
+    [[ "${grand_total}" -gt 0 ]] && gpct=$(( (grand_passed * 100) / grand_total ))
+    printf '%s%-22s %7d %8d %8d %10d %9d%%%s\n' \
+        "${C_BOLD}" "OVERALL" "${grand_total}" "${grand_passed}" "${grand_failed}" "${grand_attempts}" "${gpct}" "${C_RESET}"
+
+    printf '\n%sWeakest Tasks (Most Failed Attempts):%s\n' "${C_BOLD}" "${C_RESET}"
+    local weak_lines
+    weak_lines="$(jq -r '
+        [.tasks | to_entries[] | select(.value.failures > 0)]
+        | sort_by(-.value.failures)
+        | .[0:5][]
+        | "  - \(.key): \(.value.failures) failure(s) out of \(.value.attempts) attempt(s) [status: \(.value.status)]"
+    ' "${LAB_PROGRESS_FILE}")"
+    if [[ -n "${weak_lines}" ]]; then
+        printf '%s\n' "${weak_lines}"
+    else
+        printf '  None recorded yet. Keep practicing!\n'
+    fi
+}
+
+cmd_exam() {
+    local sub="${1:-}"
+    [[ -n "${sub}" ]] || die "Usage: lab exam <1..5> | lab exam grade | lab exam check-reboot"
+    case "${sub}" in
+        grade)        exam_grade ;;
+        check-reboot) exam_check_reboot ;;
+        *)            exam_start "${sub}" ;;
+    esac
+}
+
+main() {
+    local sub="${1:-help}"
+    shift || true
+    case "${sub}" in
+        list)     cmd_list "$@" ;;
+        start)    cmd_start "$@" ;;
+        grade)    cmd_grade "$@" ;;
+        hint)     cmd_hint "$@" ;;
+        solution) cmd_solution "$@" ;;
+        reset)    cmd_reset "$@" ;;
+        stats)    cmd_stats "$@" ;;
+        exam)     cmd_exam "$@" ;;
+        -h|--help|help) usage ;;
+        *) die "Unknown subcommand '${sub}'. Run 'lab --help' for usage." ;;
+    esac
+}
+
+main "$@"
