@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EX188 Operations Portal</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/config.js"></script>
+</head>
+<body>
+  <main class="card">
+    <h1>Cloud-Native Operations Portal</h1>
+    <p id="banner">Status: Operational</p>
+    <dl>
+      <dt>Environment</dt><dd id="env">default</dd>
+      <dt>Region</dt><dd id="region">local-lab</dd>
+      <dt>API Endpoint</dt><dd id="api">/api/v1</dd>
+    </dl>
+  </main>
+  <script>
+    const cfg = window.PORTAL_CONFIG || {};
+    if (cfg.banner) document.getElementById('banner').textContent = cfg.banner;
+    if (cfg.environment) document.getElementById('env').textContent = cfg.environment;
+    if (cfg.region) document.getElementById('region').textContent = cfg.region;
+    if (cfg.apiEndpoint) document.getElementById('api').textContent = cfg.apiEndpoint;
+  </script>
+</body>
+</html>

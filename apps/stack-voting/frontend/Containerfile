@@ -1,0 +1,8 @@
+FROM registry.access.redhat.com/ubi10/ubi:latest
+RUN dnf install -y python3 && dnf clean all
+WORKDIR /opt/vote-ui
+COPY app.py /opt/vote-ui/app.py
+RUN chmod 0755 /opt/vote-ui/app.py
+USER 1001
+EXPOSE 8080
+CMD ["python3", "/opt/vote-ui/app.py"]

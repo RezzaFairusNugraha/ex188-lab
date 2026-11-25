@@ -1,0 +1,5 @@
+[
+  {"sku": "RHEL-SUB-01", "name": "Enterprise Linux Server", "stock": 42},
+  {"sku": "OCP-NODE-04", "name": "Container Platform Worker", "stock": 18},
+  {"sku": "POD-SEC-09", "name": "Registry Security Appliance", "stock": 7}
+]

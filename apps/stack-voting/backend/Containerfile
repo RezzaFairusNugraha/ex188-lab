@@ -1,0 +1,8 @@
+FROM registry.access.redhat.com/ubi10/ubi:latest
+RUN dnf install -y nodejs && dnf clean all
+WORKDIR /opt/vote-api
+COPY package.json server.js /opt/vote-api/
+RUN mkdir -p /var/lib/voting/ballots && chown -R 1001:0 /var/lib/voting && chmod -R g=u /var/lib/voting
+USER 1001
+EXPOSE 4000
+CMD ["node", "/opt/vote-api/server.js"]

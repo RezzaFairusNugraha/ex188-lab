@@ -1,0 +1,4 @@
+# Sample configuration for webapp-flask
+SITE_TITLE=Acme Cloud Portal
+SUPPORT_TEAM=sre@acme.internal
+MAINTENANCE_MODE=false

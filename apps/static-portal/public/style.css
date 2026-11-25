@@ -1,0 +1,4 @@
+body { font-family: sans-serif; background: #0f172a; color: #f8fafc; margin: 3rem; }
+.card { max-width: 640px; padding: 2rem; background: #1e293b; border-radius: 8px; border: 1px solid #334155; }
+dt { font-weight: bold; color: #94a3b8; margin-top: 0.75rem; }
+dd { margin-left: 0; font-family: monospace; color: #38bdf8; }
