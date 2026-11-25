@@ -1,0 +1,8 @@
+id: "00-09"
+title: "Persistent Host Port Rules with firewall-cmd"
+domain: "00-warmup-linux"
+difficulty: "Medium"
+points: 10
+est_minutes: 7
+objectives: ["0.4"]
+supports_seed: true

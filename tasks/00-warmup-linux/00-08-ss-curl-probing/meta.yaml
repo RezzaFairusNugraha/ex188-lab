@@ -1,0 +1,8 @@
+id: "00-08"
+title: "Socket Discovery with ss -tulpn and HTTP Probing with curl"
+domain: "00-warmup-linux"
+difficulty: "Medium"
+points: 10
+est_minutes: 8
+objectives: ["0.4"]
+supports_seed: true
