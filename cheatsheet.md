@@ -77,6 +77,9 @@ blocked = true
 ```
 
 ```bash
+# Re-pushing a GPG-signed Red Hat UBI image to a private registry:
+podman push --remove-signatures secure-reg.lab.local:5443/ns/ubi-minimal:1.0
+
 # Persistent login (survives reboot!):
 podman login --authfile ~/.config/containers/auth.json -u student -p redhat123 auth-reg.lab.local:5444
 

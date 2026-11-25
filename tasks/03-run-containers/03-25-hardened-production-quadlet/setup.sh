@@ -33,7 +33,7 @@ EOF
 run_privileged mkdir -p "/etc/containers/certs.d/${REG_TLS_HOST}"
 run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.d/${REG_TLS_HOST}/ca.crt"
 podman build -q -t "${REG_TLS_HOST}/prod/metrics-agent:1.0" "${WORK}/b" >/dev/null
-podman push "${REG_TLS_HOST}/prod/metrics-agent:1.0" >/dev/null
+podman push --remove-signatures "${REG_TLS_HOST}/prod/metrics-agent:1.0" >/dev/null
 podman rmi "${REG_TLS_HOST}/prod/metrics-agent:1.0" >/dev/null 2>&1 || true
 run_privileged rm -rf "/etc/containers/certs.d/${REG_TLS_HOST}"
 rm -rf "${WORK}"

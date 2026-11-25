@@ -17,7 +17,7 @@ run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.
 podman login --authfile "${AUTH_TMP}" -u student -p redhat123 "${REG_AUTH_HOST}" >/dev/null
 for tg in 3.1.0 3.1.1 prod-signed; do
     podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_AUTH_HOST}/finance/ledger-sync:${tg}"
-    podman push --authfile "${AUTH_TMP}" "${REG_AUTH_HOST}/finance/ledger-sync:${tg}" >/dev/null
+    podman push --remove-signatures --authfile "${AUTH_TMP}" "${REG_AUTH_HOST}/finance/ledger-sync:${tg}" >/dev/null
     podman rmi "${REG_AUTH_HOST}/finance/ledger-sync:${tg}" >/dev/null 2>&1 || true
 done
 rm -f "${AUTH_TMP}"

@@ -29,16 +29,16 @@ exam_seed_push() {
     podman tag "${src}" "${ref}"
     case "${host}" in
         *:5000)
-            podman push -q --tls-verify=false "${ref}" >/dev/null
+            podman push --remove-signatures -q --tls-verify=false "${ref}" >/dev/null
             ;;
         *:5443|*:5444)
             local cdir
             cdir="$(mktemp -d)"
             cp "${LAB_CERTS_DIR}/ca.crt" "${cdir}/ca.crt"
             if [[ "${host}" == *:5444 ]]; then
-                podman push -q --cert-dir "${cdir}" --creds student:redhat123 "${ref}" >/dev/null
+                podman push --remove-signatures -q --cert-dir "${cdir}" --creds student:redhat123 "${ref}" >/dev/null
             else
-                podman push -q --cert-dir "${cdir}" "${ref}" >/dev/null
+                podman push --remove-signatures -q --cert-dir "${cdir}" "${ref}" >/dev/null
             fi
             rm -rf "${cdir}"
             ;;

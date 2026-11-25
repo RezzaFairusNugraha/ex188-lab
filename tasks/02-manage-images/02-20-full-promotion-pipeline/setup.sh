@@ -15,5 +15,5 @@ run_privileged rm -f /etc/containers/registries.conf.d/70-dev.conf
 run_privileged rm -rf "/etc/containers/certs.d/${REG_TLS_HOST}" "/etc/containers/certs.d/${REG_AUTH_HOST}"
 
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_INSECURE_HOST}/dev/payment-svc:0.9-rc2"
-podman push --tls-verify=false "${REG_INSECURE_HOST}/dev/payment-svc:0.9-rc2" >/dev/null
+podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/dev/payment-svc:0.9-rc2" >/dev/null
 podman rmi "${REG_INSECURE_HOST}/dev/payment-svc:0.9-rc2" >/dev/null 2>&1 || true

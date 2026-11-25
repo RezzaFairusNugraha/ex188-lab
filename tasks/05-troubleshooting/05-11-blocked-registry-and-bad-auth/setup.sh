@@ -16,7 +16,7 @@ run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.
 TMP_A="$(mktemp)"
 podman login --authfile "${TMP_A}" -u student -p redhat123 "${REG_AUTH_HOST}" >/dev/null
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_AUTH_HOST}/sec/scanner:2.0"
-podman push --authfile "${TMP_A}" "${REG_AUTH_HOST}/sec/scanner:2.0" >/dev/null
+podman push --remove-signatures --authfile "${TMP_A}" "${REG_AUTH_HOST}/sec/scanner:2.0" >/dev/null
 podman rmi "${REG_AUTH_HOST}/sec/scanner:2.0" >/dev/null 2>&1 || true
 rm -f "${TMP_A}"
 

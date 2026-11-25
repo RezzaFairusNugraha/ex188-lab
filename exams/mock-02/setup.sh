@@ -14,12 +14,12 @@ mkdir -p "${WORK}/seed-dir" "${WORK}/legacy-cf" "${WORK}/se-data"
 run_privileged mkdir -p "/etc/containers/certs.d/${REG_TLS_HOST}"
 run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.d/${REG_TLS_HOST}/ca.crt"
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_TLS_HOST}/m02/ubi-minimal:latest"
-podman push "${REG_TLS_HOST}/m02/ubi-minimal:latest" >/dev/null
+podman push --remove-signatures "${REG_TLS_HOST}/m02/ubi-minimal:latest" >/dev/null
 podman rmi "${REG_TLS_HOST}/m02/ubi-minimal:latest" >/dev/null 2>&1 || true
 run_privileged rm -rf "/etc/containers/certs.d/${REG_TLS_HOST}"
 
 # Seed dir: transport + build secret + legacy Containerfile
-podman push -q registry.access.redhat.com/ubi10/ubi-minimal:latest "dir:${WORK}/seed-dir"
+podman push --remove-signatures -q registry.access.redhat.com/ubi10/ubi-minimal:latest "dir:${WORK}/seed-dir"
 printf 'M02_BuildKey_DoNotBake_992\n' > "${WORK}/build.key"
 cp -a "${LAB_APPS_DIR}/webapp-flask/." "${WORK}/legacy-cf/"
 cat > "${WORK}/legacy-cf/Containerfile" <<'EOF'

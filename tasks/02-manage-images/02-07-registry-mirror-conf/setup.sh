@@ -14,6 +14,6 @@ podman rmi -f upstream-hub.corp.example/platform/agent:2.1 "${REG_TLS_HOST}/plat
 run_privileged mkdir -p "/etc/containers/certs.d/${REG_TLS_HOST}"
 run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.d/${REG_TLS_HOST}/ca.crt"
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_TLS_HOST}/platform/agent:2.1"
-podman push "${REG_TLS_HOST}/platform/agent:2.1" >/dev/null
+podman push --remove-signatures "${REG_TLS_HOST}/platform/agent:2.1" >/dev/null
 podman rmi "${REG_TLS_HOST}/platform/agent:2.1" >/dev/null 2>&1 || true
 run_privileged rm -rf "/etc/containers/certs.d/${REG_TLS_HOST}"

@@ -12,7 +12,7 @@ mkdir -p "${WORK}/broken-126"
 
 # Seed base image in :5000 and repo in :5444
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_INSECURE_HOST}/m01-seed/ubi-base:1.0"
-podman push --tls-verify=false "${REG_INSECURE_HOST}/m01-seed/ubi-base:1.0" >/dev/null
+podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/m01-seed/ubi-base:1.0" >/dev/null
 podman rmi "${REG_INSECURE_HOST}/m01-seed/ubi-base:1.0" >/dev/null 2>&1 || true
 
 TMP_A="$(mktemp)"
@@ -20,7 +20,7 @@ run_privileged mkdir -p "/etc/containers/certs.d/${REG_AUTH_HOST}"
 run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.d/${REG_AUTH_HOST}/ca.crt"
 podman login --authfile "${TMP_A}" -u student -p redhat123 "${REG_AUTH_HOST}" >/dev/null
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_AUTH_HOST}/seed/catalog-check:1.0"
-podman push --authfile "${TMP_A}" "${REG_AUTH_HOST}/seed/catalog-check:1.0" >/dev/null
+podman push --remove-signatures --authfile "${TMP_A}" "${REG_AUTH_HOST}/seed/catalog-check:1.0" >/dev/null
 podman rmi "${REG_AUTH_HOST}/seed/catalog-check:1.0" >/dev/null 2>&1 || true
 rm -f "${TMP_A}"
 run_privileged rm -rf "/etc/containers/certs.d/${REG_AUTH_HOST}" "/etc/containers/certs.d/${REG_TLS_HOST}"

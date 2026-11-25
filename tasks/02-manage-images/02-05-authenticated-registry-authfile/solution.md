@@ -10,7 +10,7 @@ podman login \
   auth-reg.lab.local:5444
 
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest auth-reg.lab.local:5444/prod/core-ubi:1.0
-podman push --authfile /home/student/.config/containers/auth.json auth-reg.lab.local:5444/prod/core-ubi:1.0
+podman push --remove-signatures --authfile /home/student/.config/containers/auth.json auth-reg.lab.local:5444/prod/core-ubi:1.0
 ```
 
 ## Explanation

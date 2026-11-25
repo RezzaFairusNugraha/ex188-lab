@@ -12,8 +12,8 @@ mkdir -p "${WORK}"
 exam_seed_push "${EXAM_BASE_IMAGE}" "${REG_TLS_HOST}/m05/core:1.0"
 exam_build_app api-express localhost/m05-prebuilt-api:1.0
 exam_ensure_image "${EXAM_BASE_IMAGE}"
-podman push -q "${EXAM_BASE_IMAGE}" "dir:${WORK}/seed-dir" >/dev/null 2>&1 || { mkdir -p "${WORK}/seed-dir"; podman push -q "${EXAM_BASE_IMAGE}" "dir:${WORK}/seed-dir" >/dev/null; }
-podman push -q "${EXAM_BASE_IMAGE}" "oci-archive:${WORK}/seed-oci.tar:localhost/m05-seed:1.0" >/dev/null
+podman push --remove-signatures -q "${EXAM_BASE_IMAGE}" "dir:${WORK}/seed-dir" >/dev/null 2>&1 || { mkdir -p "${WORK}/seed-dir"; podman push --remove-signatures -q "${EXAM_BASE_IMAGE}" "dir:${WORK}/seed-dir" >/dev/null; }
+podman push --remove-signatures -q "${EXAM_BASE_IMAGE}" "oci-archive:${WORK}/seed-oci.tar:localhost/m05-seed:1.0" >/dev/null
 podman run --name m05-legacybox "${EXAM_BASE_IMAGE}" sh -c 'echo stamp-m05 > /etc/stamp' >/dev/null
 podman run -d --name m05-hotfix "${EXAM_BASE_IMAGE}" sh -c 'echo INITIAL=true > /etc/hotfix.conf && sleep 3600' >/dev/null
 sleep 1

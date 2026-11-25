@@ -3,7 +3,7 @@
 sudo mkdir -p /etc/containers/certs.d/secure-reg.lab.local:5443
 sudo install -m 0644 /opt/ex188-lab/certs/ca.crt /etc/containers/certs.d/secure-reg.lab.local:5443/ca.crt
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest secure-reg.lab.local:5443/qa/verified-ubi:1.0
-podman push secure-reg.lab.local:5443/qa/verified-ubi:1.0
+podman push --remove-signatures secure-reg.lab.local:5443/qa/verified-ubi:1.0
 ```
 
 ## Explanation

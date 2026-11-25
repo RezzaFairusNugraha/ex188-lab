@@ -13,7 +13,7 @@ podman rm -f agent-0510 >/dev/null 2>&1 || true
 run_privileged mkdir -p "/etc/containers/certs.d/${REG_TLS_HOST}"
 run_privileged install -m 0644 "${LAB_CERTS_DIR}/ca.crt" "/etc/containers/certs.d/${REG_TLS_HOST}/ca.crt"
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_TLS_HOST}/ops/agent-0510:1.0"
-podman push "${REG_TLS_HOST}/ops/agent-0510:1.0" >/dev/null
+podman push --remove-signatures "${REG_TLS_HOST}/ops/agent-0510:1.0" >/dev/null
 podman rmi "${REG_TLS_HOST}/ops/agent-0510:1.0" >/dev/null 2>&1 || true
 
 # Introduce the bug: wrong folder name missing :5443 AND restrictive 0600 mode!

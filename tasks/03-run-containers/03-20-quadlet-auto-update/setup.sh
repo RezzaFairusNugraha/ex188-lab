@@ -26,6 +26,6 @@ FROM quay.io/nginx/nginx-unprivileged:1.26-alpine
 RUN echo "REL-V2" > /usr/share/nginx/html/index.html
 EOF
 podman build -q -t "${REG_INSECURE_HOST}/ops/autoweb:prod" "${WORK}/v1" >/dev/null
-podman push --tls-verify=false "${REG_INSECURE_HOST}/ops/autoweb:prod" >/dev/null
+podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/ops/autoweb:prod" >/dev/null
 podman build -q -t localhost/autoweb-stage:v2 "${WORK}/v2" >/dev/null
 rm -rf "${WORK}"

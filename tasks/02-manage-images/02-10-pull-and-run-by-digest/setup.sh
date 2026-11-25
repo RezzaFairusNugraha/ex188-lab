@@ -24,8 +24,8 @@ USER 1001
 EOF
 
 podman build -q -t "${REG_INSECURE_HOST}/sec/audit-runner:v1" "${WORK}/b1" >/dev/null
-podman push --tls-verify=false "${REG_INSECURE_HOST}/sec/audit-runner:v1" --digestfile "${WORK}/.expected-digest" >/dev/null
+podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/sec/audit-runner:v1" --digestfile "${WORK}/.expected-digest" >/dev/null
 podman build -q -t "${REG_INSECURE_HOST}/sec/audit-runner:latest" "${WORK}/b2" >/dev/null
-podman push --tls-verify=false "${REG_INSECURE_HOST}/sec/audit-runner:latest" >/dev/null
+podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/sec/audit-runner:latest" >/dev/null
 podman rmi -f "${REG_INSECURE_HOST}/sec/audit-runner:v1" "${REG_INSECURE_HOST}/sec/audit-runner:latest" >/dev/null 2>&1 || true
 rm -rf "${WORK}/b1" "${WORK}/b2"

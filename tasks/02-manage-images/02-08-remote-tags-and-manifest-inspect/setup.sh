@@ -13,6 +13,6 @@ mkdir -p "${WORK}"
 
 for t in 1.0 1.1 2.0-rc1; do
     podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_INSECURE_HOST}/catalog/billing-api:${t}"
-    podman push --tls-verify=false "${REG_INSECURE_HOST}/catalog/billing-api:${t}" >/dev/null
+    podman push --remove-signatures --tls-verify=false "${REG_INSECURE_HOST}/catalog/billing-api:${t}" >/dev/null
     podman rmi "${REG_INSECURE_HOST}/catalog/billing-api:${t}" >/dev/null 2>&1 || true
 done

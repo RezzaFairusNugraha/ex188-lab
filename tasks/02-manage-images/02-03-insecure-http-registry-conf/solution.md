@@ -7,7 +7,7 @@ insecure = true
 EOF
 
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest registry.lab.local:5000/dev/base-ubi:1.0
-podman push registry.lab.local:5000/dev/base-ubi:1.0
+podman push --remove-signatures registry.lab.local:5000/dev/base-ubi:1.0
 podman rmi registry.lab.local:5000/dev/base-ubi:1.0
 podman pull registry.lab.local:5000/dev/base-ubi:1.0
 ```
