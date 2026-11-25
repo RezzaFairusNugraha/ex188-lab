@@ -9,7 +9,7 @@ WORK="$(student_home)/workspace/00-12"
 
 check_cmd 5 "SELinux boolean container_manage_cgroup is enabled persistently" \
     "container_manage_cgroup is off in runtime or persistent policy (did you pass -P?)" \
-    bash -c '[[ "$(getsebool container_manage_cgroup | awk "{print \$3}")" == "on" ]] && run_privileged semanage boolean -l | awk "\$1==\"container_manage_cgroup\" {print \$4}" | grep -Eq "on|true"'
+    bash -c '[[ "$(getsebool container_manage_cgroup | awk "{print \$3}")" == "on" ]] && run_privileged semanage boolean -l | grep -Eq "^container_manage_cgroup[[:space:]]+\(on[[:space:]]*,[[:space:]]*on\)"'
 
 assert_file_contains 3 "${WORK}/firewalld-type.txt" "^firewalld_t$" "firewalld SELinux domain (firewalld_t) recorded"
 

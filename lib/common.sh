@@ -111,6 +111,8 @@ run_privileged() {
     fi
 }
 
+export -f hr log_header log_info log_ok log_warn log_err die student_user student_home student_uid run_privileged
+
 # Lightweight YAML scalar reader for simple flat meta.yaml files (no external yq required)
 meta_get() {
     local file="$1"
