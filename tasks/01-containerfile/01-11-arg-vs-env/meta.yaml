@@ -1,0 +1,8 @@
+id: "01-11"
+title: "Build-Time ARG vs Persistent Runtime ENV (--build-arg Overrides)"
+domain: "01-containerfile"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["1.5"]
+supports_seed: true

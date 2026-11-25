@@ -1,0 +1,8 @@
+id: "02-20"
+title: "End-to-End Secure Promotion Pipeline Across Dev (:5000), QA (:5443), and Prod (:5444)"
+domain: "02-manage-images"
+difficulty: "Hard"
+points: 20
+est_minutes: 16
+objectives: ["2.1", "2.2", "2.3", "2.4"]
+supports_seed: false

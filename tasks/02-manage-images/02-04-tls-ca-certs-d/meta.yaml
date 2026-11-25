@@ -1,0 +1,8 @@
+id: "02-04"
+title: "Trusting a Private TLS Registry CA Under /etc/containers/certs.d (:5443)"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["2.1", "2.4"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "02-18"
+title: "Observable Forensics: Classifying Mystery Images Built via save/load, export/import, and commit"
+domain: "02-manage-images"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["2.5"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "02-15"
+title: "Bundling Multiple Images into One Tarball with podman save -m"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["2.5"]
+supports_seed: false

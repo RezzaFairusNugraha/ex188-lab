@@ -1,0 +1,8 @@
+id: "02-01"
+title: "Searching Container Registries with podman search Filters and Custom Format"
+domain: "02-manage-images"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["2.2"]
+supports_seed: false

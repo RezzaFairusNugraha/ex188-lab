@@ -1,0 +1,8 @@
+id: "02-11"
+title: "Semantic Multi-Tagging (2.3.1, 2.3, 2, latest) and Multi-Namespace Push"
+domain: "02-manage-images"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["2.3", "2.4"]
+supports_seed: false

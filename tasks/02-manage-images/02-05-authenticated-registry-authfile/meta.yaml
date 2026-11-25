@@ -1,0 +1,8 @@
+id: "02-05"
+title: "Authenticating to a Protected TLS Registry (:5444) and Custom --authfile"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["2.1", "2.4"]
+supports_seed: false

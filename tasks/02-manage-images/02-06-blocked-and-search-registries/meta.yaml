@@ -1,0 +1,8 @@
+id: "02-06"
+title: "Enforcing Blocked Registries and Search Order in registries.conf"
+domain: "02-manage-images"
+difficulty: "Hard"
+points: 20
+est_minutes: 12
+objectives: ["2.1", "2.2"]
+supports_seed: false

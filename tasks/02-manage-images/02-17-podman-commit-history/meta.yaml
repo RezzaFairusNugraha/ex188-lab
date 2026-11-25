@@ -1,0 +1,8 @@
+id: "02-17"
+title: "Capturing Live Container Modifications to a New Layer with podman commit"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["2.5"]
+supports_seed: false

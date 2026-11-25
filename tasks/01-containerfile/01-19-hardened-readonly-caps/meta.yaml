@@ -1,0 +1,8 @@
+id: "01-19"
+title: "Hardened Runtime Execution: --read-only, --tmpfs, --cap-drop=ALL, and no-new-privileges"
+domain: "01-containerfile"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["1.8", "3.1"]
+supports_seed: false

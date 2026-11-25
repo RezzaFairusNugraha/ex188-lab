@@ -1,0 +1,8 @@
+id: "02-03"
+title: "Configuring Plain HTTP Registry Access in registries.conf.d (:5000)"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["2.1", "2.4"]
+supports_seed: false

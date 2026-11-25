@@ -1,0 +1,8 @@
+id: "02-19"
+title: "Offline Image Ingestion Using Podman oci-archive: and dir: Transports"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["2.2", "2.5"]
+supports_seed: false

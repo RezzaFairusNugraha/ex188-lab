@@ -1,0 +1,8 @@
+id: "02-07"
+title: "Configure a Registry Mirror with [[registry.mirror]] in registries.conf.d"
+domain: "02-manage-images"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["2.1"]
+supports_seed: false

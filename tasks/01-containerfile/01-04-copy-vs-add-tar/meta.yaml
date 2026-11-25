@@ -1,0 +1,8 @@
+id: "01-04"
+title: "COPY vs ADD: Auto-Extracting Local Tarballs vs Copying Literal Archives"
+domain: "01-containerfile"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["1.2"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "01-17"
+title: "Read-Only Configuration Mounts (:ro), Shared Labels (:z), and Named Volumes"
+domain: "01-containerfile"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["1.7"]
+supports_seed: false

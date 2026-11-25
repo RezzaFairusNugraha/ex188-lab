@@ -1,0 +1,8 @@
+id: "02-13"
+title: "Auditing Registry Repositories and Tags via curl /v2/ HTTP API"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["2.4"]
+supports_seed: false

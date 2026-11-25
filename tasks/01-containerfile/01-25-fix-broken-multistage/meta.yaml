@@ -1,0 +1,8 @@
+id: "01-25"
+title: "Fixing a Broken Multi-Stage Containerfile with Leaked Credentials and Root Trap"
+domain: "01-containerfile"
+difficulty: "Hard"
+points: 20
+est_minutes: 15
+objectives: ["1.1", "1.6", "1.8", "1.9"]
+supports_seed: false

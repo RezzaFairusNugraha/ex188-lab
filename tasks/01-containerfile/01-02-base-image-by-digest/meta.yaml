@@ -1,0 +1,8 @@
+id: "01-02"
+title: "Pinning a Base Image by Immutable SHA256 Digest"
+domain: "01-containerfile"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["1.1", "2.2"]
+supports_seed: false

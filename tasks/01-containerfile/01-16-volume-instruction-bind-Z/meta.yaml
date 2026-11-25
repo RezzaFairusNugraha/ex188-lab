@@ -1,0 +1,8 @@
+id: "01-16"
+title: "VOLUME Instruction and Host Bind Mount with Private SELinux Label (:Z)"
+domain: "01-containerfile"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["1.7"]
+supports_seed: false

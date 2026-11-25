@@ -1,0 +1,8 @@
+id: "01-15"
+title: "Multi-Stage Go Build (metrics-go) into Minimal Non-Root Runtime Image"
+domain: "01-containerfile"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["1.1", "1.2", "1.8"]
+supports_seed: true

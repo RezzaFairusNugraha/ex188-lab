@@ -1,0 +1,8 @@
+id: "02-09"
+title: "Registry-to-Registry Promotion via podman pull, tag, and push"
+domain: "02-manage-images"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["2.2", "2.3", "2.4"]
+supports_seed: true
