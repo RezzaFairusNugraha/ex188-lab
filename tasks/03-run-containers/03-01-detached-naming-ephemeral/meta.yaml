@@ -1,0 +1,8 @@
+id: "03-01"
+title: "Detached Container Execution, Custom Hostname, User Override, and Ephemeral --rm Runs"
+domain: "03-run-containers"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["3.1"]
+supports_seed: true

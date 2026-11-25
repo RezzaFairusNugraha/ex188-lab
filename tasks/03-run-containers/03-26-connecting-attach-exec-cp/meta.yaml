@@ -1,0 +1,8 @@
+id: "03-26"
+title: "Connecting to Running Containers: podman attach, podman exec -it, and podman cp"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["3.6"]
+supports_seed: false

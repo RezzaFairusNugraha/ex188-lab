@@ -1,0 +1,8 @@
+id: "05-02"
+title: "Troubleshooting Exit Code 126 (Non-Executable Wrapper Script in Containerfile)"
+domain: "05-troubleshooting"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["5.1"]
+supports_seed: false

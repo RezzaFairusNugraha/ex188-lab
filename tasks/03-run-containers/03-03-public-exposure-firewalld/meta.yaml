@@ -1,0 +1,8 @@
+id: "03-03"
+title: "Exposing a Rootless Web Service Publicly with firewalld Integration"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["3.2"]
+supports_seed: true

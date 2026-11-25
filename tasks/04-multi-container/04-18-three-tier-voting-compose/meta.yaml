@@ -1,0 +1,8 @@
+id: "04-18"
+title: "Full 3-Tier stack-voting Deployment via compose.yaml"
+domain: "04-multi-container"
+difficulty: "Hard"
+points: 20
+est_minutes: 16
+objectives: ["4.1", "4.2", "4.4", "4.5", "4.6"]
+supports_seed: false

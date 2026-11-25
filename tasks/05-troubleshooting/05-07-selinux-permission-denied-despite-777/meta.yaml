@@ -1,0 +1,8 @@
+id: "05-07"
+title: "Fixing Bind-Mount Permission Denied Despite Mode 0777 (Missing SELinux Label)"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["5.3"]
+supports_seed: false

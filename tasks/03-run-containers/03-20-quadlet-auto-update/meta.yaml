@@ -1,0 +1,8 @@
+id: "03-20"
+title: "Rolling Registry Updates with Quadlet AutoUpdate=registry and podman auto-update"
+domain: "03-run-containers"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["3.7", "1.9"]
+supports_seed: false

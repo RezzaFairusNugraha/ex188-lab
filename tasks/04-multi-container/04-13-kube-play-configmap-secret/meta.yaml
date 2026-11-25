@@ -1,0 +1,8 @@
+id: "04-13"
+title: "Injecting Kubernetes ConfigMap and Secret Manifests via podman kube play"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 12
+objectives: ["4.4", "4.6", "4.1"]
+supports_seed: false

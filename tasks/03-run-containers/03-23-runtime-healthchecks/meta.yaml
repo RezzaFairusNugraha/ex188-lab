@@ -1,0 +1,8 @@
+id: "03-23"
+title: "Configuring Runtime Healthchecks (--health-cmd) and On-Failure Action"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["3.1", "3.6"]
+supports_seed: false

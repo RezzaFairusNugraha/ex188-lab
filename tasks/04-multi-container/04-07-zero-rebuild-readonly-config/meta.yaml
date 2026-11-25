@@ -1,0 +1,8 @@
+id: "04-07"
+title: "Externalized Read-Only Config Override Without Rebuilding the Image"
+domain: "04-multi-container"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["4.6"]
+supports_seed: false

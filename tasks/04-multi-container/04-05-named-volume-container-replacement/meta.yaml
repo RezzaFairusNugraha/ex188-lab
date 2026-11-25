@@ -1,0 +1,8 @@
+id: "04-05"
+title: "Named Volume Lifecycle and Data Survival Across Container Replacement"
+domain: "04-multi-container"
+difficulty: "Easy"
+points: 10
+est_minutes: 8
+objectives: ["4.5"]
+supports_seed: false

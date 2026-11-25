@@ -1,0 +1,8 @@
+id: "03-18"
+title: "Quadlet .container Coupled with a .volume Unit and EnvironmentFile"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 11
+objectives: ["3.7", "1.7"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "04-14"
+title: "Linked Quadlet Stack: .network, .volume, and Dependent .container Units"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 12
+objectives: ["4.1", "4.2", "3.7"]
+supports_seed: false

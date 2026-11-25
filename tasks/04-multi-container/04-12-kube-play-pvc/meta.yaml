@@ -1,0 +1,8 @@
+id: "04-12"
+title: "Deploying a Multi-Container Pod and PersistentVolumeClaim with podman kube play"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 11
+objectives: ["4.1", "4.5"]
+supports_seed: false

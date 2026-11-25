@@ -1,0 +1,8 @@
+id: "05-13"
+title: "Diagnosing and Fixing an unhealthy Container via State.Health.Log"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["5.5"]
+supports_seed: false

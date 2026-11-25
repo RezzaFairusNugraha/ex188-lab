@@ -1,0 +1,8 @@
+id: "04-01"
+title: "Container-to-Container DNS Resolution and Network Aliases on User-Defined Networks"
+domain: "04-multi-container"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["4.2"]
+supports_seed: false

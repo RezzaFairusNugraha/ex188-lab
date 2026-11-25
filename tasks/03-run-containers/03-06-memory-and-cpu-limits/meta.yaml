@@ -1,0 +1,8 @@
+id: "03-06"
+title: "Enforcing cgroup v2 Memory and CPU Limits (--memory, --memory-swap, --cpus)"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["3.1"]
+supports_seed: false

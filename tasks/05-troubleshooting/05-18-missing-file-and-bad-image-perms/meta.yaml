@@ -1,0 +1,8 @@
+id: "05-18"
+title: "Diagnosing Image Build Defects: Missing Config File and Root-Only Ownership"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["5.1", "5.3"]
+supports_seed: false

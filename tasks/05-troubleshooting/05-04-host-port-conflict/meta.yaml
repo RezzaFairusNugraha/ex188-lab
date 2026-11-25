@@ -1,0 +1,8 @@
+id: "05-04"
+title: "Resolving a Host TCP Port Conflict Blocking Service Startup"
+domain: "05-troubleshooting"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["5.2"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "05-19"
+title: "Cleaning Stale Pod, Container, and Subnet Conflicts Blocking Stack Redeployment"
+domain: "05-troubleshooting"
+difficulty: "Hard"
+points: 20
+est_minutes: 12
+objectives: ["5.2", "4.1"]
+supports_seed: false

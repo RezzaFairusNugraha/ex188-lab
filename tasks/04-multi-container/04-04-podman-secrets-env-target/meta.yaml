@@ -1,0 +1,8 @@
+id: "04-04"
+title: "Injecting Podman Secrets as Environment Variables (--secret type=env) for Database Images"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["4.4"]
+supports_seed: false

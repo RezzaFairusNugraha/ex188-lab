@@ -1,0 +1,8 @@
+id: "04-08"
+title: "Two-Tier Web and PostgreSQL Deployment via compose.yaml and .env Interpolation"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 11
+objectives: ["4.1", "4.3", "4.5"]
+supports_seed: false

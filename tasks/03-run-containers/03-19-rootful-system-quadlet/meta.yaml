@@ -1,0 +1,8 @@
+id: "03-19"
+title: "Deploying a Rootful System-Scope Quadlet in /etc/containers/systemd"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["3.7", "3.2"]
+supports_seed: false

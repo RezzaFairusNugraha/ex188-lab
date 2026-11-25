@@ -1,0 +1,8 @@
+id: "03-15"
+title: "Auditing Container Filesystem Drift with podman diff"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["3.6"]
+supports_seed: false

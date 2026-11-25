@@ -1,0 +1,8 @@
+id: "03-16"
+title: "Creating a User-Defined Subnet Network and Assigning a Static Container IP"
+domain: "03-run-containers"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["3.1"]
+supports_seed: false

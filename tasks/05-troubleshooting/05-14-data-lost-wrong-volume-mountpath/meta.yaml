@@ -1,0 +1,8 @@
+id: "05-14"
+title: "Fixing Data Loss Across Container Recreation (Wrong Volume Mount Destination)"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 10
+objectives: ["5.3", "4.5"]
+supports_seed: false

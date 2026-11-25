@@ -1,0 +1,8 @@
+id: "03-08"
+title: "Filtering Container Logs with Timestamps and Tail Counts"
+domain: "03-run-containers"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["3.3"]
+supports_seed: false

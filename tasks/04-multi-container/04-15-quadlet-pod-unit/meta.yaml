@@ -1,0 +1,8 @@
+id: "04-15"
+title: "Multi-Container Pod Managed by a Quadlet .pod Unit Across Reboot"
+domain: "04-multi-container"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["4.1", "3.7"]
+supports_seed: false

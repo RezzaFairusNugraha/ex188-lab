@@ -1,0 +1,8 @@
+id: "05-03"
+title: "Diagnosing Crash-Loop Exit Code 1 via podman logs and Vendor README"
+domain: "05-troubleshooting"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["5.1"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "05-21"
+title: "Describing Live Stack Resources with pod, volume, network, secret, and container inspect"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 11
+objectives: ["5.2", "3.5", "4.1"]
+supports_seed: false

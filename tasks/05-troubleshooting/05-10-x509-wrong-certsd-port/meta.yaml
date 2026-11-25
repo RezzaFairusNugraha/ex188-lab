@@ -1,0 +1,8 @@
+id: "05-10"
+title: "Fixing x509 Unknown Authority Error Caused by Misnamed /etc/containers/certs.d Path"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["5.4", "2.1"]
+supports_seed: false

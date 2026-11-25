@@ -1,0 +1,8 @@
+id: "05-11"
+title: "Resolving Image Pull Failure: Blocked Registry Rule + Invalid Stored Credentials"
+domain: "05-troubleshooting"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["5.4", "2.1"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "04-11"
+title: "Exporting a Running Multi-Container Pod to Kubernetes YAML with podman kube generate"
+domain: "04-multi-container"
+difficulty: "Medium"
+points: 15
+est_minutes: 9
+objectives: ["4.1"]
+supports_seed: false

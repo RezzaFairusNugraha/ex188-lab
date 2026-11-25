@@ -1,0 +1,8 @@
+id: "05-15"
+title: "Quadlet Unit Invisible to systemctl --user: Debugging with podman-system-generator --dryrun"
+domain: "05-troubleshooting"
+difficulty: "Hard"
+points: 20
+est_minutes: 12
+objectives: ["5.5", "3.7"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "05-16"
+title: "Services Vanish on Logout/Reboot: Fixing Missing Linger and Quadlet [Install] Target"
+domain: "05-troubleshooting"
+difficulty: "Hard"
+points: 20
+est_minutes: 12
+objectives: ["5.5", "3.7"]
+supports_seed: false

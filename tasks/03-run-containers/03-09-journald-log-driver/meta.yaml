@@ -1,0 +1,8 @@
+id: "03-09"
+title: "Routing Container Logs to journald and Querying CONTAINER_NAME Fields"
+domain: "03-run-containers"
+difficulty: "Medium"
+points: 15
+est_minutes: 8
+objectives: ["3.3"]
+supports_seed: false

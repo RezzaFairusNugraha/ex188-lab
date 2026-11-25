@@ -1,0 +1,8 @@
+id: "03-14"
+title: "Non-Interactive Command Execution and Bidirectional File Copy (podman exec and cp)"
+domain: "03-run-containers"
+difficulty: "Easy"
+points: 10
+est_minutes: 6
+objectives: ["3.6"]
+supports_seed: false

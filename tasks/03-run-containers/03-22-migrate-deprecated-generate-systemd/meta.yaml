@@ -1,0 +1,8 @@
+id: "03-22"
+title: "Migrating a Deprecated podman generate systemd Unit to Podman v5 Quadlet"
+domain: "03-run-containers"
+difficulty: "Hard"
+points: 20
+est_minutes: 14
+objectives: ["3.7"]
+supports_seed: false

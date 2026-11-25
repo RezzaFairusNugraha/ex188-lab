@@ -1,0 +1,8 @@
+id: "05-12"
+title: "Fixing Deployment Failure Caused by Unqualified Short Name and Non-Existent Tag"
+domain: "05-troubleshooting"
+difficulty: "Easy"
+points: 10
+est_minutes: 7
+objectives: ["5.4", "2.2"]
+supports_seed: false

@@ -1,0 +1,8 @@
+id: "04-19"
+title: "Full 3-Tier stack-voting Deployment as Reboot-Persistent Quadlet Services"
+domain: "04-multi-container"
+difficulty: "Hard"
+points: 20
+est_minutes: 18
+objectives: ["4.1", "4.2", "4.4", "3.7"]
+supports_seed: false
