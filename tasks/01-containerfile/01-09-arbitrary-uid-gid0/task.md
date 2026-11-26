@@ -7,4 +7,4 @@
 1. Copy `/home/student/apps/webapp-flask/` into `/home/student/workspace/01-09/` and author `/home/student/workspace/01-09/Containerfile` on `registry.access.redhat.com/ubi10/ubi:latest`.
 2. Configure `/opt/webapp` and `/var/lib/webapp/data` so group `0` (`root` group) owns them (`chgrp -R 0`) and group permissions equal owner permissions (`chmod -R g=u`).
 3. Set `ENV APP_PORT=8080 APP_ENV=production CHECK_STORAGE=1`, `USER 1001`, and `CMD ["python3", "/opt/webapp/app.py"]`.
-4. Build `localhost/webapp-ocp-ready:1.0`. Grading will start it with `--user 1000680000:0` and test both `/healthz` and `POST /entries`!
+4. Build `localhost/webapp-ocp-ready:1.0`. Grading will start it with `--user 42420:0` and test both `/healthz` and `POST /entries`!

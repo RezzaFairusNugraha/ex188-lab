@@ -14,12 +14,12 @@ check_cmd 4 "/var/lib/webapp/data has group owner 0 and group-write bit enabled"
     bash -c "podman run --rm --entrypoint stat '${IMG}' -c '%g:%A' /var/lib/webapp/data | grep -Eq '^0:d....w'"
 
 podman rm -f grade-01-09 >/dev/null 2>&1 || true
-if podman run -d --name grade-01-09 --user 1000680000:0 -p 18809:8080 "${IMG}" >/dev/null 2>&1 && sleep 2 \
+if podman run -d --name grade-01-09 --user 42420:0 -p 18809:8080 "${IMG}" >/dev/null 2>&1 && sleep 2 \
     && curl -fsS http://127.0.0.1:18809/healthz | grep -q '"status": *"ok"' \
     && curl -fsS -X POST "http://127.0.0.1:18809/entries?msg=ocp-uid-ok" | grep -q 'ocp-uid-ok'; then
-    pass_check 8 "Container succeeds on /healthz and POST /entries when forced to random --user 1000680000:0"
+    pass_check 8 "Container succeeds on /healthz and POST /entries when forced to random --user 42420:0"
 else
-    fail_check 8 "Arbitrary UID runtime check" "container failed healthz or write test when run with --user 1000680000:0"
+    fail_check 8 "Arbitrary UID runtime check" "container failed healthz or write test when run with --user 42420:0"
 fi
 podman rm -f grade-01-09 >/dev/null 2>&1 || true
 

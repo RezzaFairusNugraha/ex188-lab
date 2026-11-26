@@ -2,7 +2,7 @@
 Red Hat's arbitrary-UID pattern sets directory group ownership to GID `0` (`chgrp -R 0`) and mirrors user permissions onto group permissions (`chmod -R g=u`).
 
 ## Level 2 — Approach
-Create `/opt/webapp` and `/var/lib/webapp/data`, copy `app.py`, run `chgrp -R 0 /opt/webapp /var/lib/webapp && chmod -R g=u /opt/webapp /var/lib/webapp`, set `USER 1001`, build, and test with `podman run --rm --user 1000680000:0 ...`.
+Create `/opt/webapp` and `/var/lib/webapp/data`, copy `app.py`, run `chgrp -R 0 /opt/webapp /var/lib/webapp && chmod -R g=u /opt/webapp /var/lib/webapp`, set `USER 1001`, build, and test with `podman run --rm --user 42420:0 ...`.
 
 ## Level 3 — Key Commands
 ```bash

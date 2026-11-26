@@ -41,7 +41,7 @@ exam_task_end
 exam_task_begin "07" 'Non-root web image'
 exam_check 5 'm03-web:1.0 missing' ev 'podman image exists localhost/m03-web:1.0'
 exam_check 5 'm03-web:1.0 does not run as 1001' ev 'img_user localhost/m03-web:1.0 1001'
-exam_check 5 'data dir not writable by UID 1000770000 GID 0' ev 'podman run --rm --user 1000770000:0 --entrypoint test localhost/m03-web:1.0 -w /var/lib/webapp/data'
+exam_check 5 'data dir not writable by UID 42420 GID 0' ev 'podman run --rm --user 42420:0 --entrypoint test localhost/m03-web:1.0 -w /var/lib/webapp/data'
 exam_task_end
 
 exam_task_begin "08" 'Multi-stage Go image'

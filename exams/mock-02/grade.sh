@@ -33,7 +33,7 @@ exam_check 7 "Healthcheck metadata missing on m02-worker:1.0 (forgot --format do
 exam_task_end
 
 exam_task_begin "06" "Arbitrary-UID api-express image pushed to :5444"
-exam_check 15 "auth-reg.lab.local:5444/m02/api:1.0 missing or /var/lib/api-express/audit not GID 0 writable" bash -c "podman pull -q --authfile '${SHOME}/.config/containers/auth.json' auth-reg.lab.local:5444/m02/api:1.0 && podman run --rm --user 1000770000:0 --entrypoint test localhost/m02-api:1.0 -w /var/lib/api-express/audit"
+exam_check 15 "auth-reg.lab.local:5444/m02/api:1.0 missing or /var/lib/api-express/audit not GID 0 writable" bash -c "podman pull -q --authfile '${SHOME}/.config/containers/auth.json' auth-reg.lab.local:5444/m02/api:1.0 && podman run --rm --user 42420:0 --entrypoint test localhost/m02-api:1.0 -w /var/lib/api-express/audit"
 exam_task_end
 
 exam_task_begin "07" "Build-time --secret without history leak"
