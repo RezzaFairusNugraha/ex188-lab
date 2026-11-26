@@ -18,7 +18,7 @@ CMD ["python3", "/opt/webapp/app.py"]
 EOF
 
 podman build -t localhost/webapp-vol:1.0 /home/student/workspace/01-16
-podman run -d --name notes-writer --userns=keep-id \
+podman run -d --name notes-writer --userns=--userns=keep-id:uid=1001,gid=1001:uid=1001,gid=1001:uid=1001,gid=1001 \
   -p 8096:8080 -e APP_ENV=production \
   -v /home/student/workspace/01-16/host-notes:/var/lib/webapp/data:Z \
   localhost/webapp-vol:1.0

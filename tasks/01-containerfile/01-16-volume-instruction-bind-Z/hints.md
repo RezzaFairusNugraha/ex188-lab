@@ -1,8 +1,8 @@
 ## Level 1 — Nudge
-Include `VOLUME ["/var/lib/webapp/data"]` in `Containerfile`, pass `-v .../host-notes:/var/lib/webapp/data:Z` (with `--userns=keep-id` if running as UID 1001), and trigger `POST /entries`.
+Include `VOLUME ["/var/lib/webapp/data"]` in `Containerfile`, pass `-v .../host-notes:/var/lib/webapp/data:Z` (with `--userns=--userns=keep-id:uid=1001,gid=1001:uid=1001,gid=1001` if running as UID 1001), and trigger `POST /entries`.
 
 ## Level 2 — Approach
-Build `localhost/webapp-vol:1.0` with `USER 1001` and `VOLUME ["/var/lib/webapp/data"]`. Create `~/workspace/01-16/host-notes`, start `notes-writer` with `--userns=keep-id -v ~/workspace/01-16/host-notes:/var/lib/webapp/data:Z -p 8096:8080 -e APP_ENV=production`, and run `curl -X POST 'http://127.0.0.1:8096/entries?msg=first-persistent-note'`.
+Build `localhost/webapp-vol:1.0` with `USER 1001` and `VOLUME ["/var/lib/webapp/data"]`. Create `~/workspace/01-16/host-notes`, start `notes-writer` with `--userns=--userns=keep-id:uid=1001,gid=1001:uid=1001,gid=1001:uid=1001,gid=1001 -v ~/workspace/01-16/host-notes:/var/lib/webapp/data:Z -p 8096:8080 -e APP_ENV=production`, and run `curl -X POST 'http://127.0.0.1:8096/entries?msg=first-persistent-note'`.
 
 ## Level 3 — Key Commands
 ```bash
@@ -18,7 +18,7 @@ EXPOSE 8080
 CMD ["python3", "/opt/webapp/app.py"]
 EOF
 podman build -t localhost/webapp-vol:1.0 ~/workspace/01-16
-podman run -d --name notes-writer --userns=keep-id \
+podman run -d --name notes-writer --userns=--userns=keep-id:uid=1001,gid=1001:uid=1001,gid=1001:uid=1001,gid=1001 \
   -p 8096:8080 -e APP_ENV=production \
   -v ~/workspace/01-16/host-notes:/var/lib/webapp/data:Z \
   localhost/webapp-vol:1.0
