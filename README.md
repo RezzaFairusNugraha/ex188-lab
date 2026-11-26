@@ -1,4 +1,4 @@
-# EX188 Hands-On Practice Lab Suite (RHEL 10 + Podman v5)
+# EX188 Hands-On Practice Lab Suite (RHEL 10 + Podman v5 + AlmaLinux 10)
 
 A repeatable, performance-based practice lab suite and mock-exam simulator for the **Red Hat Certified Specialist in Containers (EX188)** exam (V5K curriculum on **RHEL 10** with **Podman v5**).
 
