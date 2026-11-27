@@ -8,3 +8,5 @@ EXT_PORT="${EXT_PORT:-8883}"
 podman rm -f edge-portal >/dev/null 2>&1 || true
 run_privileged firewall-cmd --permanent --remove-port="${EXT_PORT}/tcp" >/dev/null 2>&1 || true
 run_privileged firewall-cmd --reload >/dev/null 2>&1 || true
+
+rm -rf "$(student_home)/workspace/03-03"

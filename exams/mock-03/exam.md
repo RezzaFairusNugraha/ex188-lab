@@ -6,6 +6,11 @@
 - **Workspace**: `/home/student/workspace/m03/` (create sub-directories as needed).
 - Tasks are chained: later tasks reuse images, registries and files from earlier ones.
 
+- **Exam Environment Notes**:
+  - When re-pushing a signed Red Hat base image (`ubi10/*`) directly without building, pass `--remove-signatures` to `podman push`.
+  - When defining Quadlet `.volume`, `.network`, or `.pod` units, set explicit `VolumeName=`, `NetworkName=`, or `PodName=` keys if a specific Podman object name is requested.
+  - Run `lab exam check-reboot` to verify Quadlet/firewall/linger boot persistence; if you perform a full `sudo systemctl reboot` before `lab exam grade`, ensure non-Quadlet containers were started with `--restart=always` (with `systemctl --user enable podman-restart.service`) or start them again before running `lab exam grade`.
+
 ---
 ### Task 01 (10 pts) - Registry trust and insecure HTTP registry
 Trust `/opt/ex188-lab/certs/ca.crt` for `secure-reg.lab.local:5443` and `auth-reg.lab.local:5444` under `/etc/containers/certs.d/` (never mark them insecure). Mark `registry.lab.local:5000` as `insecure = true` in `/etc/containers/registries.conf.d/50-m03.conf`. Do not create `~/.config/containers/registries.conf`.
@@ -26,10 +31,10 @@ Promote `secure-reg.lab.local:5443/m03/base:1.0` to `auth-reg.lab.local:5444/m03
 Using only `curl` with CA verification and `student:redhat123`, save `/v2/m03/base/tags/list` of `auth-reg.lab.local:5444` to `m03/tags.json`.
 
 ### Task 07 (15 pts) - Non-root web image
-Package `/home/student/apps/webapp-flask` as `localhost/m03-web:1.0`: `USER 1001`, `WORKDIR /opt/webapp`, `/var/lib/webapp/data` writable by an arbitrary UID in group 0, exec-form `CMD`, a `.containerignore` excluding `*.secret`. Do not modify `app.py`.
+Package `webapp-flask` (pre-staged in `/home/student/workspace/m03/web-build/`) as `localhost/m03-web:1.0`: `USER 1001`, `WORKDIR /opt/webapp`, `/var/lib/webapp/data` writable by an arbitrary UID in group 0, exec-form `CMD`, a `.containerignore` excluding `*.secret`. Do not modify `app.py`.
 
 ### Task 08 (20 pts) - Multi-stage Go image
-Build `localhost/m03-metrics:1.0` from `/home/student/apps/metrics-go` in two stages (static binary, `ubi10/ubi-minimal` runtime, `USER 1001`, exec-form ENTRYPOINT). The runtime stage must not contain the Go toolchain.
+Build `localhost/m03-metrics:1.0` from `metrics-go` (pre-staged in `/home/student/workspace/m03/metrics-build/`) in two stages (static binary, `ubi10/ubi-minimal` runtime, `USER 1001`, exec-form ENTRYPOINT). The runtime stage must not contain the Go toolchain.
 
 ### Task 09 (10 pts) - Push application images
 Push the two images as `auth-reg.lab.local:5444/m03/web:1.0` and `auth-reg.lab.local:5444/m03/metrics:1.0`.

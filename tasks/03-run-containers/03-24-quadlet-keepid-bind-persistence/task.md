@@ -1,12 +1,12 @@
 # Task 03-24: Rootless Quadlet with UserNS=keep-id and SELinux Host Bind Mount Persistence
 
-## Scenario
-Combine three critical EX188 objectives in a single service:
+## Objective
+Deploy a persistent rootless Quadlet service combining:
 1. Rootless UID mapping (`UserNS=keep-id:uid=1001,gid=1001` in Quadlet)
 2. Host directory bind mount (`/srv/student-journal` owned by `student:student`) with SELinux `:Z`
 3. Reboot persistence (`~/.config/containers/systemd/journal-web.container` + `linger`)
 
-## Requirements
+## Specification
 1. Ensure `/srv/student-journal` exists and is owned by `student:student`.
 2. Author `~/.config/containers/systemd/journal-web.container` running pre-built `localhost/webapp-0324:1.0` (which runs as `USER 1001`):
    - `ContainerName=journal-web`

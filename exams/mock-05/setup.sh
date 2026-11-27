@@ -19,6 +19,9 @@ podman run -d --name m05-hotfix "${EXAM_BASE_IMAGE}" sh -c 'echo INITIAL=true > 
 sleep 1
 podman exec m05-hotfix sh -c 'echo PATCHED=yes >> /etc/hotfix.conf'
 mkdir -p "${WORK}/ts126" "${WORK}/compose"
+stage_vendor_app webapp-flask "${WORK}/web-build"
+stage_vendor_app worker-py "${WORK}/worker-build"
+stage_vendor_app metrics-go "${WORK}/metrics-build"
 printf '#!/bin/sh\nexec sleep 3600\n' > "${WORK}/ts126/run.sh"
 chmod 0644 "${WORK}/ts126/run.sh"
 printf 'FROM registry.access.redhat.com/ubi10/ubi-minimal:latest\nCOPY run.sh /usr/local/bin/run.sh\nUSER 1001\nENTRYPOINT ["/usr/local/bin/run.sh"]\n' > "${WORK}/ts126/Containerfile"

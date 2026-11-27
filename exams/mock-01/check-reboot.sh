@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
+export LAB_SKIP_PROGRESS=1
 EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${EXAM_DIR}/../../lib/common.sh"
 source "${EXAM_DIR}/../../lib/grade.sh"

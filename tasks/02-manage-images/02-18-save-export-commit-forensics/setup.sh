@@ -31,6 +31,6 @@ USER 1001
 EOF
 podman build -q -t localhost/mystery-gamma:1.0 "${WORK}/tmp_cf" >/dev/null
 podman save -o "${WORK}/sv.tar" localhost/mystery-gamma:1.0
-podman rmi localhost/mystery-gamma:1.0 >/dev/null
+podman rmi localhost/mystery-gamma:1.0 >/dev/null 2>&1 || true
 podman load -i "${WORK}/sv.tar" >/dev/null
 rm -rf "${WORK}/tmp_cf" "${WORK}/sv.tar"

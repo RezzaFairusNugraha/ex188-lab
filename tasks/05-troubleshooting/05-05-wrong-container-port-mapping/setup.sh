@@ -21,8 +21,9 @@ COPY --from=builder --chmod=0755 /out/metrics-agent /usr/local/bin/metrics-agent
 USER 1001
 ENTRYPOINT ["/usr/local/bin/metrics-agent"]
 EOF
+# build helper
 podman build -q -t localhost/ts-metrics-0505:1.0 "${WORK}/b" >/dev/null
-rm -rf "${WORK}"
+rm -rf "${WORK}/b"
 
 # Bug: app listens on METRICS_PORT=9095, but -p mapped 9505:80!
 podman run -d --name metrics-broken-port -p 9505:80 -e METRICS_PORT=9095 -e SERVICE_NAME=ts-0505 localhost/ts-metrics-0505:1.0 >/dev/null

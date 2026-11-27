@@ -7,6 +7,6 @@ source "${TASK_DIR}/../../../lib/state.sh"
 seed_init "01-19"
 WORK="$(student_home)/workspace/01-19"
 rm -rf "${WORK}"
-mkdir -p "${WORK}"
+stage_vendor_app webapp-flask "${WORK}"
 podman rm -f hardened-web >/dev/null 2>&1 || true
 podman rmi -f localhost/webapp-hardened:1.0 >/dev/null 2>&1 || true

@@ -1,9 +1,9 @@
 # Task 01-11: Build-Time ARG vs Persistent Runtime ENV (--build-arg Overrides)
 
-## Scenario
+## Objective
 Build-only parameters (such as an internal artifact repository URL or build stamp) should **not** persist in runtime container `env` output, whereas application version and release channel **should** persist as runtime `ENV` variables.
 
-## Requirements
+## Specification
 1. Author `/home/student/workspace/01-11/Containerfile` on `registry.access.redhat.com/ubi10/ubi-minimal:latest`:
    - Declare `ARG BUILD_CHANNEL=dev` and `ARG APP_RELEASE=1.0.0`.
    - Write `${BUILD_CHANNEL}` into `/etc/build-channel` during `RUN`, **without** exporting `BUILD_CHANNEL` as an `ENV` variable.

@@ -21,8 +21,9 @@ COPY --chown=1001:0 config /opt/api-express/config
 USER 1001
 CMD ["node", "server.js"]
 EOF
+# build helper
 podman build -q -t localhost/ts-api-0503:1.0 "${WORK}/b" >/dev/null
-rm -rf "${WORK}"
+rm -rf "${WORK}/b"
 
 podman run -d --name billing-api-0503 -p 3503:3000 -e AUTH_REQUIRED=true localhost/ts-api-0503:1.0 >/dev/null
 sleep 1

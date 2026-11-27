@@ -16,6 +16,7 @@ state_init() {
     ensure_lab_dirs
     if [[ ! -f "${LAB_PROGRESS_FILE}" ]]; then
         printf '{"version":1,"current_task":null,"tasks":{}}\n' > "${LAB_PROGRESS_FILE}"
+        chown "$(student_user):$(student_user)" "${LAB_PROGRESS_FILE}" 2>/dev/null || true
     fi
 }
 
@@ -40,8 +41,11 @@ state_set_current_task() {
             "max_points": 0,
             "last_updated": ""
         }) |
-        if .tasks[$tid].status == "not_started" then .tasks[$tid].status = "in_progress" else . end
+        if (.tasks[$tid].passes // 0) > 0 then .tasks[$tid].status = "passed"
+        elif .tasks[$tid].status == "not_started" then .tasks[$tid].status = "in_progress"
+        else . end
     ' "${LAB_PROGRESS_FILE}" > "${tmp}" && mv "${tmp}" "${LAB_PROGRESS_FILE}"
+    chown "$(student_user):$(student_user)" "${LAB_PROGRESS_FILE}" 2>/dev/null || true
 }
 
 state_record_grade() {
@@ -76,7 +80,7 @@ state_record_grade() {
             "max_points": $maxp,
             "last_updated": $ts
         }) |
-        .status = $st |
+        .status = (if ($ok == 1 or (.passes // 0) > 0) then "passed" else $st end) |
         .attempts = (.attempts + 1) |
         .passes = (.passes + (if $ok == 1 then 1 else 0 end)) |
         .failures = (.failures + (if $ok == 0 then 1 else 0 end)) |
@@ -85,6 +89,7 @@ state_record_grade() {
         .best_score = (if $earned > .best_score then $earned else .best_score end) |
         .last_updated = $ts)
     ' "${LAB_PROGRESS_FILE}" > "${tmp}" && mv "${tmp}" "${LAB_PROGRESS_FILE}"
+    chown "$(student_user):$(student_user)" "${LAB_PROGRESS_FILE}" 2>/dev/null || true
 }
 
 state_get_task_status() {

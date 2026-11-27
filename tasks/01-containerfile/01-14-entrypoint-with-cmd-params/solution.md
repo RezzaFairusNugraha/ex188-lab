@@ -1,5 +1,6 @@
 ## Solution
 ```bash
+# Note: setup already pre-stages vendor files in the workspace directory
 cp -r /home/student/apps/worker-py/. /home/student/workspace/01-14/
 cat > /home/student/workspace/01-14/Containerfile <<'EOF'
 FROM registry.access.redhat.com/ubi10/ubi:latest

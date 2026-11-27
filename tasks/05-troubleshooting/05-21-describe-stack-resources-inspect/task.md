@@ -1,9 +1,9 @@
 # Task 05-21: Describing Live Stack Resources with pod, volume, network, secret, and container inspect
 
-## Scenario
+## Objective
 Before modifying or migrating an unfamiliar running multi-container application (`audit-pod-0521`), an architect audits all five Podman resource types (`pod`, `network`, `volume`, `secret`, `container`) using `podman <object> inspect --format` Go templates!
 
-## Requirements
+## Specification
 Inspect the live resources deployed by setup and create `/home/student/workspace/05-21/resource-inventory.env` containing these five exact unquoted `KEY=VALUE` lines:
 1. `POD_INFRA_ID=<full InfraContainerID of pod audit-pod-0521>`
 2. `NET_SUBNET=<IPv4 CIDR subnet string of network audit-net-0521, e.g. 10.89.91.0/24>`

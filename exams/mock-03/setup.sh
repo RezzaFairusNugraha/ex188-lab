@@ -8,6 +8,8 @@ registry_start_all
 SHOME="$(student_home)"
 WORK="${SHOME}/workspace/m03"
 mkdir -p "${WORK}"
+stage_vendor_app webapp-flask "${WORK}/web-build"
+stage_vendor_app metrics-go "${WORK}/metrics-build"
 
 exam_seed_push "${EXAM_BASE_IMAGE}" "${REG_TLS_HOST}/m03/base:1.0"
 exam_build_app api-express localhost/m03-api:1.0

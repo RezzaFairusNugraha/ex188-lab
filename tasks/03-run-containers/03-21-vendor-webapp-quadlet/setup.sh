@@ -15,4 +15,4 @@ systemctl --user daemon-reload >/dev/null 2>&1 || true
 podman rm -f acme-status >/dev/null 2>&1 || true
 podman rmi -f localhost/acme-status:1.0 >/dev/null 2>&1 || true
 rm -rf "${WORK}"
-mkdir -p "${WORK}/build"
+stage_vendor_app webapp-flask "${WORK}/build"

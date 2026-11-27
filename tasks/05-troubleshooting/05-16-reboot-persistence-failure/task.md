@@ -1,10 +1,10 @@
-# Task 05-16: Services Vanish on Logout/Reboot: Fixing Missing Linger and Quadlet [Install] Target
+# Task 05-16: Troubleshooting Rootless Service Failure Across Logout and Reboot
 
-## Scenario
-`critical-api.service` (`~/.config/containers/systemd/critical-api.container` on `-p 8516:8080`) runs fine right after `systemctl --user start critical-api.service`, yet every time the VM reboots or `student` logs out of SSH, the container stops and never comes back at boot!
+## Objective
+Rootless Quadlet service `critical-api.service` (`~/.config/containers/systemd/critical-api.container`, publishing `8516:8080`) starts manually when `systemctl --user start critical-api.service` is executed, but terminates on user logout and fails to start automatically after a system reboot.
 
-## Requirements
-Inspect `~/.config/containers/systemd/critical-api.container` and `loginctl show-user student -p Linger`, then fix **every** persistence defect so:
-1. `critical-api.container` has a valid `[Install]` section targeting `default.target` (note: fix the wrong `WantedBy=multi-user.target` currently inside the user Quadlet!).
-2. `systemctl --user daemon-reload` and `critical-api.service` are active.
-3. User lingering is enabled for `student` (`Linger=yes`).
+## Specification
+Inspect the host user configuration and `~/.config/containers/systemd/critical-api.container`, then fix every persistence defect so:
+1. `critical-api.container` uses the valid `[Install]` target required by `systemd --user` boot startup.
+2. User systemd services for `student` start at boot without requiring an active login session.
+3. `critical-api.service` is active and `http://127.0.0.1:8516/` responds `200 OK`.

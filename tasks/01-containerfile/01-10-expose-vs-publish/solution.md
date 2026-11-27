@@ -1,5 +1,6 @@
 ## Solution
 ```bash
+# Note: setup already pre-stages vendor files in the workspace directory
 cp -r /home/student/apps/static-portal/conf /home/student/apps/static-portal/public /home/student/workspace/01-10/
 cat > /home/student/workspace/01-10/Containerfile <<'EOF'
 FROM quay.io/nginx/nginx-unprivileged:1.26-alpine

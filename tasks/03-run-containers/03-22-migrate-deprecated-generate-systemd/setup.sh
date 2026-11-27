@@ -18,7 +18,7 @@ podman run -d --name seed-redis -v legacy-redis-data:/data docker.io/library/red
 sleep 2
 podman exec seed-redis redis-cli SET MIGRATION_CHECK PRESERVED_99 >/dev/null
 podman exec seed-redis redis-cli SAVE >/dev/null
-podman rm -f seed-redis >/dev/null
+podman rm -f seed-redis >/dev/null 2>&1 || true
 
 mkdir -p "${SHOME}/.config/systemd/user"
 cat > "${SHOME}/.config/systemd/user/container-legacy-cache.service" <<'EOF'

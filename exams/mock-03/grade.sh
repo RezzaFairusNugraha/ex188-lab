@@ -90,7 +90,7 @@ exam_check 5 'secret value leaked into Config.Env' ev '! podman inspect m03-api 
 exam_task_end
 
 exam_task_begin "16" 'Authenticated audit write'
-exam_check 10 'audit.log missing on volume m03-audit' ev 'test -s "$(podman volume inspect --format "{{.Mountpoint}}" m03-audit)/audit.log"'
+exam_check 10 'audit.log missing on volume m03-audit' ev 'mp=$(podman volume inspect --format "{{.Mountpoint}}" m03-audit 2>/dev/null || podman volume inspect --format "{{.Mountpoint}}" systemd-m03-audit 2>/dev/null) && [[ -n "$mp" ]] && podman unshare test -s "$mp/audit.log"'
 exam_task_end
 
 exam_task_begin "17" 'Firewall and linger'
@@ -104,8 +104,8 @@ exam_task_end
 
 exam_task_begin "19" 'Inspect report'
 exam_check 3 'API_USER wrong' ev 'grep -qx "API_USER=$(podman inspect --format "{{.Config.User}}" m03-api)" "${WORK}/report.env"'
-exam_check 3 'AUDIT_MP wrong' ev 'grep -qx "AUDIT_MP=$(podman volume inspect --format "{{.Mountpoint}}" m03-audit)" "${WORK}/report.env"'
-exam_check 4 'KPOD_INFRA wrong' ev 'grep -qx "KPOD_INFRA=$(podman pod inspect --format "{{.InfraContainerID}}" m03-app)" "${WORK}/report.env"'
+exam_check 3 'AUDIT_MP wrong' ev 'mp=$(podman volume inspect --format "{{.Mountpoint}}" m03-audit 2>/dev/null || podman volume inspect --format "{{.Mountpoint}}" systemd-m03-audit 2>/dev/null) && grep -qx "AUDIT_MP=${mp}" "${WORK}/report.env"'
+exam_check 4 'KPOD_INFRA wrong' ev 'pid=$(podman pod inspect --format "{{.InfraContainerID}}" m03-app 2>/dev/null || podman pod inspect --format "{{.InfraContainerID}}" systemd-m03-app 2>/dev/null) && grep -qx "KPOD_INFRA=${pid}" "${WORK}/report.env"'
 exam_task_end
 
 exam_task_begin "20" 'Troubleshoot: exit 127'

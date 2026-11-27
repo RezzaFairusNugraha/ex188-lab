@@ -1,9 +1,9 @@
 # Task 04-18: Full 3-Tier stack-voting Deployment via compose.yaml
 
-## Scenario
+## Objective
 Read `/home/student/apps/stack-voting/README.md`. Deploy the complete 4-container PulseVote suite (`vote-ui`, `vote-api`, `vote-db`, `vote-cache`) using `/home/student/workspace/04-18/compose.yaml`.
 
-## Requirements
+## Specification
 1. Build `localhost/vote-ui:1.0` and `localhost/vote-api:1.0` from `/home/student/apps/stack-voting/{frontend,backend}` (staged in `/home/student/workspace/04-18/`).
 2. Create Podman secret `voting_db_secret` (`VoteDbPass_0418`).
 3. Author `/home/student/workspace/04-18/compose.yaml` launching:

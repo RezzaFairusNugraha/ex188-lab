@@ -9,5 +9,5 @@ seed_var "01-08" APP_UID "1001" "1001" "1002" "2001"
 
 WORK="$(student_home)/workspace/01-08"
 rm -rf "${WORK}"
-mkdir -p "${WORK}"
+stage_vendor_app webapp-flask "${WORK}"
 podman rmi -f localhost/webapp-flask:1.0 >/dev/null 2>&1 || true

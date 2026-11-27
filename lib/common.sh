@@ -14,8 +14,7 @@ LAB_BIN_DIR="${LAB_ROOT}/bin"
 LAB_APPS_DIR="${LAB_ROOT}/apps"
 LAB_TASKS_DIR="${LAB_ROOT}/tasks"
 LAB_EXAMS_DIR="${LAB_ROOT}/exams"
-LAB_DATA_DIR="${LAB_DATA_DIR:-${HOME}/.lab}"
-LAB_ACTIVE_DIR="${LAB_DATA_DIR}/active"
+# LAB_DATA_DIR and LAB_ACTIVE_DIR are resolved below after student_home() is defined
 LAB_CERTS_DIR="${LAB_CERTS_DIR:-/opt/ex188-lab/certs}"
 
 export LAB_LIB_DIR LAB_ROOT LAB_BIN_DIR LAB_APPS_DIR LAB_TASKS_DIR LAB_EXAMS_DIR LAB_DATA_DIR LAB_ACTIVE_DIR LAB_CERTS_DIR
@@ -76,7 +75,10 @@ die() {
 }
 
 ensure_lab_dirs() {
-    mkdir -p "${LAB_DATA_DIR}" "${LAB_ACTIVE_DIR}" "${HOME}/workspace"
+    local shome
+    shome="$(student_home)"
+    mkdir -p "${LAB_DATA_DIR}" "${LAB_ACTIVE_DIR}" "${shome}/workspace"
+    chown "$(student_user):$(student_user)" "${LAB_DATA_DIR}" "${LAB_ACTIVE_DIR}" "${shome}/workspace" 2>/dev/null || true
 }
 
 # Return home directory of primary exam user (`student` if present, otherwise $HOME)
@@ -111,7 +113,25 @@ run_privileged() {
     fi
 }
 
-export -f hr log_header log_info log_ok log_warn log_err die student_user student_home student_uid run_privileged
+if [[ -z "${LAB_DATA_DIR:-}" ]]; then
+    _shome="$(student_home 2>/dev/null || printf '%s' "${HOME}")"
+    LAB_DATA_DIR="${_shome:-${HOME}}/.lab"
+    unset _shome
+fi
+LAB_ACTIVE_DIR="${LAB_DATA_DIR}/active"
+export LAB_DATA_DIR LAB_ACTIVE_DIR
+
+# Copy a read-only vendor app into a writable student build directory (Red Hat exam style)
+stage_vendor_app() {
+    local app="$1"
+    local dest="$2"
+    mkdir -p "${dest}"
+    cp -a "${LAB_APPS_DIR}/${app}/." "${dest}/"
+    chmod -R u+rwX,go+rX "${dest}" 2>/dev/null || true
+    chown -R "$(student_user):$(student_user)" "${dest}" 2>/dev/null || true
+}
+
+export -f hr log_header log_info log_ok log_warn log_err die ensure_lab_dirs student_user student_home student_uid run_privileged stage_vendor_app
 
 # Lightweight YAML scalar reader for simple flat meta.yaml files (no external yq required)
 meta_get() {

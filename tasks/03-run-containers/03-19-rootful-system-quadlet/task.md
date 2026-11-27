@@ -1,9 +1,9 @@
 # Task 03-19: Deploying a Rootful System-Scope Quadlet in /etc/containers/systemd
 
-## Scenario
-While most EX188 tasks run rootless as `student`, system-wide services (such as host-level ingress proxies or system daemons) use **rootful** Quadlets placed in `/etc/containers/systemd/` and managed via `sudo systemctl` with `WantedBy=multi-user.target`!
+## Objective
+System-wide services (such as host-level ingress proxies or system daemons) use **rootful** Quadlets placed in `/etc/containers/systemd/` and managed via `sudo systemctl` with `WantedBy=multi-user.target`!
 
-## Requirements
+## Specification
 1. Create `/etc/containers/systemd/sys-gateway.container` running `quay.io/nginx/nginx-unprivileged:1.26-alpine`:
    - `ContainerName=sys-gateway`
    - `PublishPort=8089:8080`

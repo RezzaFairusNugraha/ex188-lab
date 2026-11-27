@@ -1,5 +1,6 @@
 ## Solution
 ```bash
+# Note: setup already pre-stages vendor files in the workspace directory
 cp -r /home/student/apps/webapp-flask/. /home/student/workspace/03-21/build/
 cat > /home/student/workspace/03-21/build/Containerfile <<'EOF'
 FROM registry.access.redhat.com/ubi10/ubi:latest

@@ -10,7 +10,7 @@ IMG="localhost/minimal-archiver:1.0"
 
 assert_file_contains 3 "${WORK}/Containerfile" "^FROM registry\.access\.redhat\.com/ubi10/ubi-minimal" "Uses ubi10/ubi-minimal base"
 assert_file_contains 3 "${WORK}/Containerfile" "microdnf.*clean all" "Cleans microdnf metadata in Containerfile"
-if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -c '^RUN ' "${WORK}/Containerfile")" -eq 1 ]]; then
+if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -Ec '^[[:space:]]*RUN[[:space:]]' "${WORK}/Containerfile")" -eq 1 ]]; then
     pass_check 3 "Uses a single consolidated RUN instruction"
 else
     fail_check 3 "Single RUN instruction check" "expected exactly 1 RUN instruction in Containerfile"

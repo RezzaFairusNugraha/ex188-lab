@@ -3,6 +3,11 @@
 - **Total Score**: 300 Points (Passing Score: **210 / 300 — 70%**)
 - **Primary User**: `student` (zero `podman compose` required — pure Podman, Pods, `kube play`, and Quadlets!)
 
+- **Exam Environment Notes**:
+  - When re-pushing a signed Red Hat base image (`ubi10/*`) directly without building, pass `--remove-signatures` to `podman push`.
+  - When defining Quadlet `.volume`, `.network`, or `.pod` units, set explicit `VolumeName=`, `NetworkName=`, or `PodName=` keys if a specific Podman object name is requested.
+  - Run `lab exam check-reboot` to verify Quadlet/firewall/linger boot persistence; if you perform a full `sudo systemctl reboot` before `lab exam grade`, ensure non-Quadlet containers were started with `--restart=always` (with `systemctl --user enable podman-restart.service`) or start them again before running `lab exam grade`.
+
 ---
 
 ## Section A — Registry Mirroring, Digests & Transports (60 pts)

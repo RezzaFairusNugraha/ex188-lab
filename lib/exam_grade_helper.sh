@@ -68,8 +68,8 @@ ev()       { eval "$1"; }
 running()  { [[ "$(podman inspect --format '{{.State.Status}}' "$1" 2>/dev/null)" == "running" ]]; }
 uactive()  { systemctl --user is-active --quiet "$1"; }
 sactive()  { run_privileged systemctl is-active --quiet "$1"; }
-http()     { curl -fsS --max-time 5 "$1" 2>/dev/null | grep -Eq "$2"; }
-wanted()   { grep -Eq "^[[:space:]]*WantedBy=$2([[:space:]]|$)" "$1" 2>/dev/null; }
+http()     { local i; for i in 1 2 3 4 5 6; do curl -fsS --max-time 5 "$1" 2>/dev/null | grep -Eq "$2" && return 0; sleep 0.5; done; return 1; }
+wanted()   { grep -Eq "^[[:space:]]*WantedBy=$2([[:space:]]|$)" "$1" 2>/dev/null || run_privileged grep -Eq "^[[:space:]]*WantedBy=$2([[:space:]]|$)" "$1" 2>/dev/null; }
 img_user() { [[ "$(podman image inspect --format '{{.Config.User}}' "$1" 2>/dev/null)" == "$2"* ]]; }
 lingering() { [[ -f "/var/lib/systemd/linger/$(student_user)" ]]; }
 fw() {
@@ -104,3 +104,5 @@ exam_grade_summary() {
         return 1
     fi
 }
+
+export -f ev running uactive sactive http wanted img_user lingering fw healthy remote

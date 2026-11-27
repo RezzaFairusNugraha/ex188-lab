@@ -7,6 +7,6 @@ source "${TASK_DIR}/../../../lib/state.sh"
 seed_init "01-21"
 WORK="$(student_home)/workspace/01-21"
 rm -rf "${WORK}"
-mkdir -p "${WORK}"
+stage_vendor_app worker-py "${WORK}"
 podman rm -f worker-hc >/dev/null 2>&1 || true
 podman rmi -f localhost/worker-labeled:1.0 >/dev/null 2>&1 || true

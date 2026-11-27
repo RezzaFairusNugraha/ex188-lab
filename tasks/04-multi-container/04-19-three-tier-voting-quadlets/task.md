@@ -1,9 +1,9 @@
 # Task 04-19: Full 3-Tier stack-voting Deployment as Reboot-Persistent Quadlet Services
 
-## Scenario
+## Objective
 Deploy the entire 3-tier `stack-voting` application **without Compose**, using pure Podman v5 Quadlets (`~/.config/containers/systemd/`) so every tier (`qv-db`, `qv-cache`, `qv-api`, `qv-ui`), network (`qv-net.network`), volume (`qv-pg.volume`, `qv-ballots.volume`), and Podman secret (`Secret=qv_db_pass,...`) comes up automatically after reboot!
 
-## Requirements
+## Specification
 1. Build `localhost/qv-ui:1.0` and `localhost/qv-api:1.0` from `/home/student/apps/stack-voting/`.
 2. Create Podman secret `qv_db_pass` (`QuadletVote_0419`).
 3. Author Quadlet units in `~/.config/containers/systemd/`:

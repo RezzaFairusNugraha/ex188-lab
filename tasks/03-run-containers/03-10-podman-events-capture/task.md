@@ -1,9 +1,9 @@
 # Task 03-10: Filtering and Formatting Container Lifecycle Events with podman events
 
-## Scenario
+## Objective
 `podman events` audits container, image, volume, and pod lifecycle transitions (`create`, `init`, `start`, `die`, `remove`, `health_status`). Note that without `--stream=false` (or `--until`), `podman events` blocks forever waiting for live events!
 
-## Requirements
+## Specification
 1. Trigger a full lifecycle on container `event-probe` (`registry.access.redhat.com/ubi10/ubi-minimal:latest`): run it with `echo probe-done` so it starts and exits (`die`), leaving `event-probe` present or removed afterward.
 2. Query historical events from the last 15 minutes (`--since 15m --stream=false`) filtered strictly to:
    - `type=container`

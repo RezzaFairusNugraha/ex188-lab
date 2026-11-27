@@ -8,7 +8,7 @@ grade_init "01-24"
 WORK="$(student_home)/workspace/01-24"
 IMG="localhost/webapp-remediated:2.0"
 
-if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -c '^RUN ' "${WORK}/Containerfile")" -eq 1 ]]; then
+if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -Ec '^[[:space:]]*RUN[[:space:]]' "${WORK}/Containerfile")" -eq 1 ]]; then
     pass_check 4 "Containerfile uses a single consolidated RUN instruction"
 else
     fail_check 4 "Single RUN check" "Containerfile does not have exactly 1 RUN instruction"

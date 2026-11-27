@@ -1,9 +1,9 @@
 # Task 01-12: ARG Scope Before and After FROM Plus Runtime --env-file Overrides
 
-## Scenario
+## Objective
 An `ARG` declared **before** `FROM` can parameterize the `FROM` image line itself, but goes out of scope immediately after `FROM` unless re-declared inside the build stage!
 
-## Requirements
+## Specification
 1. Create `/home/student/workspace/01-12/Containerfile`:
    - Declare `ARG UBI_VARIANT=ubi-minimal` **before** `FROM`.
    - Use `FROM registry.access.redhat.com/ubi10/${UBI_VARIANT}:latest`.

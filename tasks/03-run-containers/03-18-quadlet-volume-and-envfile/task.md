@@ -1,9 +1,9 @@
 # Task 03-18: Quadlet .container Coupled with a .volume Unit and EnvironmentFile
 
-## Scenario
+## Objective
 Quadlet `.volume` units (`~/.config/containers/systemd/*.volume`) let systemd automatically create and mount named Podman volumes before starting a `.container` unit!
 
-## Requirements
+## Specification
 As user `student`:
 1. Create Quadlet volume unit `~/.config/containers/systemd/notes-store.volume` (`[Volume]` section, `VolumeName=notes-store`).
 2. Create `/home/student/workspace/03-18/webapp.env` setting `APP_ENV=production` and `APP_PORT=8080`.

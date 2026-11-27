@@ -1,5 +1,6 @@
 ## Solution
 ```bash
+# Note: setup already pre-stages vendor files in the workspace directory
 cp -r /home/student/apps/metrics-go/. /home/student/workspace/01-15/
 cat > /home/student/workspace/01-15/Containerfile <<'EOF'
 FROM docker.io/library/golang:1.22 AS builder

@@ -8,5 +8,5 @@ seed_init "01-18"
 WORK="$(student_home)/workspace/01-18"
 podman rm -f worker-unshare worker-keepid >/dev/null 2>&1 || true
 podman unshare rm -rf "${WORK}" >/dev/null 2>&1 || rm -rf "${WORK}"
-mkdir -p "${WORK}/build"
+stage_vendor_app worker-py "${WORK}/build"
 podman rmi -f localhost/worker-uid1001:1.0 >/dev/null 2>&1 || true

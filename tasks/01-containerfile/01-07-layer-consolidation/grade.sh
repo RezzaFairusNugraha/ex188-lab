@@ -8,7 +8,7 @@ grade_init "01-07"
 WORK="$(student_home)/workspace/01-07"
 IMG="localhost/lean-python:1.0"
 
-if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -c '^RUN ' "${WORK}/Containerfile")" -eq 1 ]]; then
+if [[ -f "${WORK}/Containerfile" ]] && [[ "$(grep -Ec '^[[:space:]]*RUN[[:space:]]' "${WORK}/Containerfile")" -eq 1 ]]; then
     pass_check 4 "Containerfile consolidates all build steps into 1 RUN instruction"
 else
     fail_check 4 "Single RUN instruction check" "Containerfile still has multiple RUN instructions"

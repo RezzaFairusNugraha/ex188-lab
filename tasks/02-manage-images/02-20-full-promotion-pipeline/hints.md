@@ -28,9 +28,9 @@ podman tag registry.lab.local:5000/dev/payment-svc:0.9-rc2 \
   auth-reg.lab.local:5444/prod/payment-svc:1.0.0 \
   auth-reg.lab.local:5444/prod/payment-svc:latest
 
-podman push secure-reg.lab.local:5443/qa/payment-svc:1.0.0
-podman push --authfile ~/.config/containers/auth.json auth-reg.lab.local:5444/prod/payment-svc:1.0.0
-podman push --authfile ~/.config/containers/auth.json auth-reg.lab.local:5444/prod/payment-svc:latest
+podman push --remove-signatures secure-reg.lab.local:5443/qa/payment-svc:1.0.0
+podman push --remove-signatures --authfile ~/.config/containers/auth.json auth-reg.lab.local:5444/prod/payment-svc:1.0.0
+podman push --remove-signatures --authfile ~/.config/containers/auth.json auth-reg.lab.local:5444/prod/payment-svc:latest
 
 curl -fsS --cacert /opt/ex188-lab/certs/ca.crt -u student:redhat123 \
   https://auth-reg.lab.local:5444/v2/prod/payment-svc/tags/list \

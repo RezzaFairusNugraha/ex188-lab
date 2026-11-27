@@ -1,9 +1,9 @@
 # Task 04-12: Deploying a Multi-Container Pod and PersistentVolumeClaim with podman kube play
 
-## Scenario
+## Objective
 When `podman kube play` encounters a `PersistentVolumeClaim` (`kind: PersistentVolumeClaim`) in a multi-document YAML file, Podman automatically creates a matching Podman named volume!
 
-## Requirements
+## Specification
 Author `/home/student/workspace/04-12/pvc-stack.yaml` (separated by `---`) defining:
 1. `PersistentVolumeClaim` named `notes-pvc` (`accessModes: [ReadWriteOnce]`, `resources.requests.storage: 1Gi`).
 2. `Pod` named `notes-kube-pod` containing:

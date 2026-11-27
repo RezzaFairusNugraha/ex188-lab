@@ -1,9 +1,9 @@
 # Task 04-14: Linked Quadlet Stack: .network, .volume, and Dependent .container Units
 
-## Scenario
+## Objective
 Deploy a reboot-persistent two-container stack (`q-db` + `q-web`) connected over a Quadlet `.network` unit (`tier-net.network`) with database persistence on a Quadlet `.volume` unit (`tier-pg.volume`) and systemd ordering (`Requires=q-db.service`, `After=q-db.service`).
 
-## Requirements
+## Specification
 Inside `/home/student/.config/containers/systemd/`:
 1. `tier-net.network` (`[Network]`, `NetworkName=tier-net`).
 2. `tier-pg.volume` (`[Volume]`, `VolumeName=tier-pg`).

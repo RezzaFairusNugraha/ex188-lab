@@ -131,7 +131,21 @@ registry_start_all() {
     else
         run_privileged podman start ex188-reg-auth >/dev/null 2>&1 || true
     fi
+
+    # Enable podman-restart.service so --restart=always brings all 3 registries up on VM reboot
+    run_privileged systemctl enable podman-restart.service >/dev/null 2>&1 || true
 }
+
+# Fast non-privileged port check; starts registries automatically only if any is down
+registry_ensure_running() {
+    local listeners
+    listeners="$(ss -tln 2>/dev/null || true)"
+    if [[ "${listeners}" != *":5000 "* || "${listeners}" != *":5443 "* || "${listeners}" != *":5444 "* ]]; then
+        registry_start_all
+    fi
+}
+
+export -f registry_generate_certs_and_auth registry_ensure_hosts registry_start_all registry_ensure_running registry_status
 
 registry_status() {
     local c

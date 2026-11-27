@@ -45,7 +45,7 @@ exam_task_end
 
 exam_task_begin "08" "Multi-stage Go metrics image built and pushed to :5443"
 exam_check 8 "m01/metrics:1.0 missing in :5443" podman pull -q secure-reg.lab.local:5443/m01/metrics:1.0
-exam_check 7 "Go compiler leaked or User != 1001 in m01-metrics:1.0" bash -c "[[ \"\$(podman image inspect --format '{{.Config.User}}' localhost/m01-metrics:1.0)\" == '1001' ]] && ! podman run --rm --entrypoint sh localhost/m01-metrics:1.0 -c 'command -v go'"
+exam_check 7 "Go compiler leaked or User != 1001 in m01-metrics:1.0" bash -c "[[ \"\$(podman image inspect --format '{{.Config.User}}' localhost/m01-metrics:1.0)\" == 1001* ]] && ! podman run --rm --entrypoint sh localhost/m01-metrics:1.0 -c 'command -v go'"
 exam_task_end
 
 exam_task_begin "09" "OCI archive saved at metrics-oci.tar"
@@ -68,7 +68,7 @@ exam_check 7 "http://127.0.0.1:18102/metrics did not return m01-edge" bash -c "c
 exam_task_end
 
 exam_task_begin "13" "Inspect summary metrics-inspect.env"
-exam_check 15 "metrics-inspect.env missing PID, USER=1001, or MEMORY=134217728" bash -c "grep -q '^USER=1001$' '${WORK}/metrics-inspect.env' && grep -q '^MEMORY=134217728$' '${WORK}/metrics-inspect.env' && grep -Eq '^PID=[0-9]+$' '${WORK}/metrics-inspect.env'"
+exam_check 15 "metrics-inspect.env missing PID, USER=1001, or MEMORY=134217728" bash -c "grep -Eq '^USER=1001(:[0-9]+)?$' '${WORK}/metrics-inspect.env' && grep -q '^MEMORY=134217728$' '${WORK}/metrics-inspect.env' && grep -Eq '^PID=[0-9]+$' '${WORK}/metrics-inspect.env'"
 exam_task_end
 
 exam_task_begin "14" "Secret m01_web_sec and SELinux-labeled notes-data"

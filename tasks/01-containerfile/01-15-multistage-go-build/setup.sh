@@ -9,6 +9,6 @@ seed_port "01-15" HOST_PORT 9190 19100 19199
 
 WORK="$(student_home)/workspace/01-15"
 rm -rf "${WORK}"
-mkdir -p "${WORK}"
+stage_vendor_app metrics-go "${WORK}"
 podman rm -f metrics-agent >/dev/null 2>&1 || true
 podman rmi -f localhost/metrics-go:1.0 >/dev/null 2>&1 || true

@@ -138,8 +138,8 @@ exam_grade() {
     eid="$(jq -r '.exam_id' "${EXAM_SESSION_FILE}")"
     edir="$(jq -r '.exam_dir' "${EXAM_SESSION_FILE}")"
 
-    bash "${edir}/grade.sh"
-    local rc=$?
+    local rc=0
+    bash "${edir}/grade.sh" || rc=$?
 
     # Unlock hints/solutions once official exam grading completes
     local tmp="${EXAM_SESSION_FILE}.tmp.$$"

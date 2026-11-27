@@ -5,6 +5,11 @@
 - **Persistence Rule**: Every service, firewall port, registry credential, and SELinux context MUST survive a full system reboot without manual intervention. Run `sudo systemctl reboot` followed by `lab exam check-reboot` before `lab exam grade`!
 - **Vendor Code Rule**: Do **not** modify application source files in `/home/student/apps/*`.
 
+- **Exam Environment Notes**:
+  - When re-pushing a signed Red Hat base image (`ubi10/*`) directly without building, pass `--remove-signatures` to `podman push`.
+  - When defining Quadlet `.volume`, `.network`, or `.pod` units, set explicit `VolumeName=`, `NetworkName=`, or `PodName=` keys if a specific Podman object name is requested.
+  - Run `lab exam check-reboot` to verify Quadlet/firewall/linger boot persistence; if you perform a full `sudo systemctl reboot` before `lab exam grade`, ensure non-Quadlet containers were started with `--restart=always` (with `systemctl --user enable podman-restart.service`) or start them again before running `lab exam grade`.
+
 ---
 
 ## Section A — Registry Trust & Base Image Management (60 pts)
@@ -14,10 +19,10 @@
 - **Task 04 (15 pts)**: Promote pre-seeded `registry.lab.local:5000/m01-seed/ubi-base:1.0` to `secure-reg.lab.local:5443/m01/ubi-base:1.0` and `secure-reg.lab.local:5443/m01/ubi-base:latest`.
 
 ## Section B — Containerfile Implementation (75 pts)
-- **Task 05 (15 pts)**: In `/home/student/workspace/m01/portal-build/`, write a `Containerfile` starting from `quay.io/nginx/nginx-unprivileged:1.26-alpine` that copies `/home/student/apps/static-portal/conf/nginx.conf` (`0644`) and `public/`, sets `LABEL com.exam.suite="mock-01"`, exposes `8080`, and builds `localhost/m01-portal:1.0`.
-- **Task 06 (15 pts)**: In `/home/student/workspace/m01/flask-build/`, package `/home/student/apps/webapp-flask/` (unmodified `app.py`) on `secure-reg.lab.local:5443/m01/ubi-base:1.0` (with `python3` from `ubi10/ubi:latest` or `ubi-minimal` `microdnf install -y python3 && microdnf clean all`), `WORKDIR /opt/webapp`, `/var/lib/webapp/data` writable by `1001:0` (`g=u`), `.containerignore` excluding `*.secret`, `USER 1001`, exec-form `CMD`, built as `localhost/m01-webapp:1.0`.
+- **Task 05 (15 pts)**: In `/home/student/workspace/m01/portal-build/`, using the pre-staged `static-portal` files, write a `Containerfile` starting from `quay.io/nginx/nginx-unprivileged:1.26-alpine` that copies `conf/nginx.conf` (`0644`) to `/etc/nginx/conf.d/default.conf` and `public/` to `/usr/share/nginx/html/`, sets `LABEL com.exam.suite="mock-01"`, exposes `8080`, and builds `localhost/m01-portal:1.0`.
+- **Task 06 (15 pts)**: In `/home/student/workspace/m01/flask-build/`, package the pre-staged `webapp-flask` files (unmodified `app.py`) on `secure-reg.lab.local:5443/m01/ubi-base:1.0` (with `python3` from `ubi10/ubi:latest` or `ubi-minimal` `microdnf install -y python3 && microdnf clean all`), `WORKDIR /opt/webapp`, `/var/lib/webapp/data` writable by `1001:0` (`g=u`), `.containerignore` excluding `*.secret`, `USER 1001`, exec-form `CMD`, built as `localhost/m01-webapp:1.0`.
 - **Task 07 (15 pts)**: Tag and push both `localhost/m01-portal:1.0` and `localhost/m01-webapp:1.0` into `auth-reg.lab.local:5444/m01/portal:1.0` and `auth-reg.lab.local:5444/m01/webapp:1.0`.
-- **Task 08 (15 pts)**: In `/home/student/workspace/m01/metrics-build/`, build multi-stage Go image `localhost/m01-metrics:1.0` from `/home/student/apps/metrics-go/` (`CGO_ENABLED=0` static binary `/usr/local/bin/metrics-agent` on `ubi10/ubi-minimal:latest`, `USER 1001`, no Go compiler in final stage) and push to `secure-reg.lab.local:5443/m01/metrics:1.0`.
+- **Task 08 (15 pts)**: In `/home/student/workspace/m01/metrics-build/`, build multi-stage Go image `localhost/m01-metrics:1.0` from the pre-staged `metrics-go` files (`CGO_ENABLED=0` static binary `/usr/local/bin/metrics-agent` on `ubi10/ubi-minimal:latest`, `USER 1001`, no Go compiler in final stage) and push to `secure-reg.lab.local:5443/m01/metrics:1.0`.
 - **Task 09 (15 pts)**: Save `localhost/m01-metrics:1.0` as an **`oci-archive`** tarball at `/home/student/workspace/m01/metrics-oci.tar`.
 
 ## Section C — Running Single Containers & Quadlet Persistence (60 pts)
@@ -30,7 +35,7 @@
 - **Task 14 (15 pts)**: Create Podman secret `m01_web_sec` (`M01Secret_771`) and host directory `/home/student/workspace/m01/notes-data` (writable by UID `1001` via `keep-id` or `podman unshare chown` + `:Z`).
 - **Task 15 (15 pts)**: Deploy a reboot-persistent **Quadlet `.pod` stack** (`m01-app.pod` on `PublishPort=18103:8080`, `m01-redis.container` running `docker.io/library/redis:7-alpine`, and `m01-web.container` running `auth-reg.lab.local:5444/m01/webapp:1.0` with `APP_ENV=production`, `REQUIRE_SECRET=1`, `CHECK_STORAGE=1`, `REDIS_HOST=127.0.0.1`, mounting `m01_web_sec` at `/run/secrets/webapp_secret` and `/home/student/workspace/m01/notes-data` at `/var/lib/webapp/data:Z`).
 - **Task 16 (15 pts)**: Post `mock01-note-ok` to `http://127.0.0.1:18103/entries` and export running pod `m01-app` via `podman kube generate` to `/home/student/workspace/m01/m01-app-pod.yaml`.
-- **Task 17 (15 pts)**: *(Compose task — 1 max)* In `/home/student/workspace/m01/compose-stack/compose.yaml`, deploy `m01-pg` (`quay.io/sclorg/postgresql-16-c10s:latest`, named volume `m01-pgvol:/var/lib/pgsql/data`, `POSTGRESQL_USER=m01u`, `POSTGRESQL_PASSWORD=m01p`, `POSTGRESQL_DATABASE=m01db`) and `m01-api` (`localhost/m01-api:1.0` built from `/home/student/apps/api-express/`, publishing `18104:3000`) on custom network `m01-cnet`.
+- **Task 17 (15 pts)**: *(Compose task — 1 max)* In `/home/student/workspace/m01/compose-stack/compose.yaml`, deploy `m01-pg` (`quay.io/sclorg/postgresql-16-c10s:latest`, named volume `m01-pgvol:/var/lib/pgsql/data`, `POSTGRESQL_USER=m01u`, `POSTGRESQL_PASSWORD=m01p`, `POSTGRESQL_DATABASE=m01db`) and `m01-api` (`localhost/m01-api:1.0` built from pre-staged `/home/student/workspace/m01/api-build/`, publishing `18104:3000`) on custom network `m01-cnet`.
 
 ## Section E — Troubleshooting Pre-Broken Workloads (45 pts)
 - **Task 18 (10 pts)**: Fix crashed container `m01-broken-126` (exit code `126` on `/home/student/workspace/m01/broken-126/`) so it stays running.

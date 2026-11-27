@@ -1,9 +1,9 @@
 # Task 03-01: Detached Container Execution, Custom Hostname, User Override, and Ephemeral --rm Runs
 
-## Scenario
-Master core `podman run` flags (`-d`, `--name`, `--hostname`, `--user`, `--rm`) so background services maintain predictable identities and one-off jobs leave zero stopped-container clutter.
+## Objective
+Launch a named background service container with custom identity settings and execute a clean ephemeral one-off container.
 
-## Requirements
+## Specification
 1. Start a detached container named `beacon-svc` (`${CNAME}` if `--seed` is active) from `registry.access.redhat.com/ubi10/ubi-minimal:latest` with:
    - Container hostname `beacon.lab.internal`
    - Runtime user `1005:1005`

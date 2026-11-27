@@ -6,6 +6,11 @@
 - **Workspace**: `/home/student/workspace/m05/` (create sub-directories as needed).
 - Tasks are chained: later tasks reuse images, registries and files from earlier ones.
 
+- **Exam Environment Notes**:
+  - When re-pushing a signed Red Hat base image (`ubi10/*`) directly without building, pass `--remove-signatures` to `podman push`.
+  - When defining Quadlet `.volume`, `.network`, or `.pod` units, set explicit `VolumeName=`, `NetworkName=`, or `PodName=` keys if a specific Podman object name is requested.
+  - Run `lab exam check-reboot` to verify Quadlet/firewall/linger boot persistence; if you perform a full `sudo systemctl reboot` before `lab exam grade`, ensure non-Quadlet containers were started with `--restart=always` (with `systemctl --user enable podman-restart.service`) or start them again before running `lab exam grade`.
+
 ---
 ### Task 01 (10 pts) - Registry trust and insecure HTTP registry
 Trust the lab CA for `secure-reg.lab.local:5443` and `auth-reg.lab.local:5444` under `/etc/containers/certs.d/`; mark `registry.lab.local:5000` insecure in `/etc/containers/registries.conf.d/50-m05.conf`.
@@ -20,13 +25,13 @@ Configure `/etc/containers/registries.conf.d/60-m05-mirror.conf` so `mirror-m05.
 Import `m05/seed-dir` (a `dir:` image) as `localhost/m05-fromdir:1.0` and `m05/seed-oci.tar` (an `oci-archive`) as `localhost/m05-fromoci:1.0`.
 
 ### Task 05 (15 pts) - Web image with healthcheck
-Build `localhost/m05-web:1.0` from `/home/student/apps/webapp-flask` (USER 1001, `HEALTHCHECK` using `python3 -c` against `/healthz`, built so the healthcheck is stored).
+Build `localhost/m05-web:1.0` from `/home/student/workspace/m05/web-build (pre-staged webapp-flask)` (USER 1001, `HEALTHCHECK` using `python3 -c` against `/healthz`, built so the healthcheck is stored).
 
 ### Task 06 (15 pts) - Worker with ENTRYPOINT + CMD
-Build `localhost/m05-worker:1.0` from `/home/student/apps/worker-py`: exec-form `ENTRYPOINT ["python3","/opt/worker/worker.py"]` and default `CMD ["--interval","2","--prefix","M05"]`, USER 1001.
+Build `localhost/m05-worker:1.0` from `/home/student/workspace/m05/worker-build (pre-staged worker-py)`: exec-form `ENTRYPOINT ["python3","/opt/worker/worker.py"]` and default `CMD ["--interval","2","--prefix","M05"]`, USER 1001.
 
 ### Task 07 (15 pts) - Multi-stage Go image
-Build `localhost/m05-metrics:1.0` from `/home/student/apps/metrics-go` (static binary, ubi-minimal runtime, USER 1001, no Go in the final image).
+Build `localhost/m05-metrics:1.0` from `/home/student/workspace/m05/metrics-build (pre-staged metrics-go)` (static binary, ubi-minimal runtime, USER 1001, no Go in the final image).
 
 ### Task 08 (10 pts) - Push images
 Push `m05-web` and `m05-worker` to `auth-reg.lab.local:5444/m05/web:1.0` and `.../m05/worker:1.0`; push `m05-metrics` to BOTH `auth-reg.lab.local:5444/m05/metrics:1.0` and `secure-reg.lab.local:5443/m05/metrics:1.0`.

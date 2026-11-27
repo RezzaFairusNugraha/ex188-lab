@@ -1,9 +1,9 @@
 # Task 04-13: Injecting Kubernetes ConfigMap and Secret Manifests via podman kube play
 
-## Scenario
+## Objective
 `podman kube play` natively consumes Kubernetes `ConfigMap` (`envFrom` or volume mounts) and `Secret` (`stringData` / base64 `data`) manifests —either embedded in the YAML or passed via `--configmap`!
 
-## Requirements
+## Specification
 Create `/home/student/workspace/04-13/cm-secret-pod.yaml` containing:
 1. A `ConfigMap` named `webapp-cm` with `APP_ENV: production` and `app.conf` containing `SITE_TITLE=Kube ConfigMap Portal`.
 2. A `Secret` named `webapp-k8s-sec` (`stringData:` `webapp_secret: KubeSecret_8812`).

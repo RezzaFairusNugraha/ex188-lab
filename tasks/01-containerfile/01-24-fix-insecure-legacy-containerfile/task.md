@@ -1,6 +1,6 @@
 # Task 01-24: Refactoring a Broken, Bloated, Root-Running Legacy Containerfile
 
-## Scenario
+## Objective
 Inspect `/home/student/workspace/01-24/Containerfile`. It suffers from six classic defects:
 1. Runs as `root` (`USER` never set).
 2. Uses 4 separate `RUN` layers without cleaning `dnf` metadata.
@@ -9,7 +9,7 @@ Inspect `/home/student/workspace/01-24/Containerfile`. It suffers from six class
 5. Leaves `/var/lib/webapp/data` owned by `root:root`, blocking non-root writes.
 6. Uses shell-form `CMD python3 app.py`.
 
-## Requirements
+## Specification
 1. Fix `/home/student/workspace/01-24/Containerfile` so it:
    - Consolidates package installation, directory creation, ownership (`1001:0` + `g=u`), and `dnf clean all` into **a single `RUN` instruction**.
    - Removes the hard-coded `APP_SECRET` from the `Containerfile` completely.

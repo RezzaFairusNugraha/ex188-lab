@@ -1,9 +1,9 @@
 # Task 04-16: Persistent Kubernetes Workload Managed by a Quadlet .kube Unit with ConfigMap
 
-## Scenario
+## Objective
 By itself, `podman kube play` is imperative — after a system reboot, pods launched via CLI `podman kube play` will **not** restart automatically unless wrapped in a **Quadlet `.kube` unit** (`[Kube]` `Yaml=...`, `ConfigMap=...`)!
 
-## Requirements
+## Specification
 1. Create `/home/student/workspace/04-16/kube-cm.yaml` defining `ConfigMap` `portal-cfg` (`APP_ENV: production` and `SITE_TITLE: Quadlet Kube Unit`).
 2. Create `/home/student/workspace/04-16/kube-pod.yaml` defining `Pod` `qkube-pod` with:
    - Container `redis` (`docker.io/library/redis:7-alpine`)

@@ -1,10 +1,13 @@
-# Task 01-10: EXPOSE Metadata vs Runtime Port Publishing (-p and -P)
+# Task 01-10: Image EXPOSE Metadata and Runtime Port Publishing
 
-## Scenario
-Many candidates mistakenly assume `EXPOSE` inside a `Containerfile` publishes a host port on its own. In reality, `EXPOSE` records image metadata that `podman run -P` (`--publish-all`) uses to map random ephemeral host ports, while `-p` maps explicit ports.
+## Objective
+Static web assets (`conf/nginx.conf`, `public/`, and `README.md`) have been pre-staged in `/home/student/workspace/01-10/`. Package the web portal image and launch two containers demonstrating explicit vs dynamic host port publishing.
 
-## Requirements
-1. Create `/home/student/workspace/01-10/Containerfile` from `quay.io/nginx/nginx-unprivileged:1.26-alpine`, copying `/home/student/apps/static-portal/conf/nginx.conf` to `/etc/nginx/conf.d/default.conf` and `/home/student/apps/static-portal/public/` to `/usr/share/nginx/html/`.
-2. Declare `EXPOSE 8080` in the `Containerfile` and build `localhost/portal-expose:1.0`.
-3. Start container `portal-explicit` publishing container port `8080` on explicit host port `8091` (`${HOST_PORT}` if `--seed` is active).
-4. Start container `portal-auto` using `-P` (`--publish-all`) and save its dynamically assigned host TCP port number (integer only) to `/home/student/workspace/01-10/auto-port.txt`.
+## Specification
+As user `student`:
+1. Create `/home/student/workspace/01-10/Containerfile` from `quay.io/nginx/nginx-unprivileged:1.26-alpine`:
+   - Copy `conf/nginx.conf` to `/etc/nginx/conf.d/default.conf` (world-readable so Nginx UID `101` can read it).
+   - Copy the contents of `public/` into `/usr/share/nginx/html/`.
+   - Declare TCP port `8080` in image metadata and build `localhost/portal-expose:1.0`.
+2. Start detached container `portal-explicit` from `localhost/portal-expose:1.0` publishing host port `8091` (`${HOST_PORT}` if `--seed` is active) to container port `8080`.
+3. Start detached container `portal-auto` from `localhost/portal-expose:1.0` publishing all exposed ports to ephemeral host ports automatically, and write **only** the assigned numeric host TCP port to `/home/student/workspace/01-10/auto-port.txt`.

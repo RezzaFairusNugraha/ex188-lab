@@ -154,7 +154,7 @@ exam_reset_prefix() {
     for f in "${qdir}/${p}"-* "${qdir}/${p}".*; do
         [[ -e "${f}" ]] || continue
         u="$(_quadlet_unit_for "$(basename "${f}")")"
-        [[ -n "${u}" ]] && systemctl --user stop "${u}" >/dev/null 2>&1
+        [[ -n "${u}" ]] && systemctl --user stop "${u}" >/dev/null 2>&1 || true
         rm -f "${f}"
     done
     rm -f "${shome}/.config/systemd/user/${p}-"* 2>/dev/null || true
@@ -164,7 +164,7 @@ exam_reset_prefix() {
     for f in /etc/containers/systemd/"${p}"-*; do
         [[ -e "${f}" ]] || continue
         u="$(_quadlet_unit_for "$(basename "${f}")")"
-        [[ -n "${u}" ]] && run_privileged systemctl stop "${u}" >/dev/null 2>&1
+        [[ -n "${u}" ]] && run_privileged systemctl stop "${u}" >/dev/null 2>&1 || true
         run_privileged rm -f "${f}"
     done
     run_privileged systemctl daemon-reload >/dev/null 2>&1 || true
@@ -173,8 +173,8 @@ exam_reset_prefix() {
     # Rootless runtime objects
     podman pod ps -q --filter "name=^${p}-" 2>/dev/null | xargs -r podman pod rm -f >/dev/null 2>&1 || true
     podman ps -aq --filter "name=^${p}-" 2>/dev/null | xargs -r podman rm -f >/dev/null 2>&1 || true
-    podman volume ls -q --filter "name=^${p}-" 2>/dev/null | xargs -r podman volume rm -f >/dev/null 2>&1 || true
-    podman network ls -q --filter "name=^${p}-" 2>/dev/null | xargs -r podman network rm -f >/dev/null 2>&1 || true
+    podman volume ls -q --filter "name=${p}-" 2>/dev/null | xargs -r podman volume rm -f >/dev/null 2>&1 || true
+    podman network ls -q --filter "name=${p}-" 2>/dev/null | xargs -r podman network rm -f >/dev/null 2>&1 || true
     podman secret ls --format '{{.Name}}' 2>/dev/null | grep -E "^${p}[_-]" | xargs -r podman secret rm >/dev/null 2>&1 || true
     podman images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -E "^localhost/${p}-" | xargs -r podman rmi -f >/dev/null 2>&1 || true
 

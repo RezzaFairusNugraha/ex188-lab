@@ -1,9 +1,9 @@
 # Task 03-25: Hardened Production Quadlet: Digest Pull, ReadOnly, DropCapability, and Firewall
 
-## Scenario
+## Objective
 Deploy `metrics-go` (already pushed by setup to `secure-reg.lab.local:5443/prod/metrics-agent:1.0`) as a fully hardened, reboot-persistent rootless Quadlet service!
 
-## Requirements
+## Specification
 1. Trust `/opt/ex188-lab/certs/ca.crt` for `secure-reg.lab.local:5443` under `/etc/containers/certs.d/` and look up the `@sha256:...` digest of `secure-reg.lab.local:5443/prod/metrics-agent:1.0`.
 2. Create `~/.config/containers/systemd/prod-metrics.container`:
    - `Image=secure-reg.lab.local:5443/prod/metrics-agent@sha256:...` (pinned by digest!)

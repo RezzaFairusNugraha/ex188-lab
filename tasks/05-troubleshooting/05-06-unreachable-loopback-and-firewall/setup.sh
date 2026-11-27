@@ -20,8 +20,9 @@ COPY --chown=1001:0 app.py requirements.txt /opt/webapp/
 USER 1001
 CMD ["python3", "/opt/webapp/app.py"]
 EOF
+# build helper
 podman build -q -t localhost/ts-web-0506:1.0 "${WORK}/b" >/dev/null
-rm -rf "${WORK}"
+rm -rf "${WORK}/b"
 
 podman run -d --name webapp-ext-0506 -p 127.0.0.1:8506:8080 \
     -e APP_ENV=production -e APP_BIND=127.0.0.1 localhost/ts-web-0506:1.0 >/dev/null

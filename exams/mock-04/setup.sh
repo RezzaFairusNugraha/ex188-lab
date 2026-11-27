@@ -19,8 +19,9 @@ podman volume create m04-ts-pgvol >/dev/null
 podman run -d --name m04-ts-db --network m04-ts-net -v m04-ts-pgvol:/var/lib/pgsql/data -e POSTGRESQL_USER=u -e POSTGRESQL_PASSWORD=p -e POSTGRESQL_DATABASE=d quay.io/sclorg/postgresql-16-c10s:latest >/dev/null
 podman run -d --name m04-ts-app -p 18406:8080 -e APP_ENV=production -e DB_HOST=postgres-typo localhost/m04-ts-web:1.0 >/dev/null
 podman run -d --name m04-ts-uid -p 18405:8080 -e APP_ENV=production -v "${WORK}/journal:/var/lib/webapp/data:Z" localhost/m04-ts-web:1.0 >/dev/null
-mkdir -p "${SHOME}/.config/systemd/user"
-cat > "${SHOME}/.config/containers/systemd-m04-lost.tmp" <<'EOS'
+mkdir -p "${SHOME}/.config/systemd/user" "${SHOME}/.config/containers/systemd"
+stage_vendor_app stack-voting "${WORK}/voting-src"
+cat > "${SHOME}/.config/systemd/user/m04-ts-lost.container" <<'EOS'
 [Containers]
 Image=quay.io/nginx/nginx-unprivileged:1.26-alpine
 ContainerName=m04-ts-lost
@@ -28,7 +29,6 @@ Ports=18407:8080
 [Install]
 WantedBy=multi-user.target
 EOS
-mv "${SHOME}/.config/containers/systemd-m04-lost.tmp" "${SHOME}/.config/systemd/user/m04-ts-lost.container"
 exam_build_inline localhost/m04-ts-oom:1.0 $'FROM registry.access.redhat.com/ubi10/ubi:latest\nRUN dnf install -y python3 && dnf clean all\nUSER 1001\nCMD ["python3","-u","-c","x=bytearray(40*1024*1024);print(1);import time;time.sleep(3600)"]'
 podman run -d --name m04-ts-oom --memory 10m --memory-swap 10m localhost/m04-ts-oom:1.0 >/dev/null 2>&1 || true
 cat > "${WORK}/deploy.sh" <<'EOS'

@@ -6,6 +6,11 @@
 - **Workspace**: `/home/student/workspace/m04/` (create sub-directories as needed).
 - Tasks are chained: later tasks reuse images, registries and files from earlier ones.
 
+- **Exam Environment Notes**:
+  - When re-pushing a signed Red Hat base image (`ubi10/*`) directly without building, pass `--remove-signatures` to `podman push`.
+  - When defining Quadlet `.volume`, `.network`, or `.pod` units, set explicit `VolumeName=`, `NetworkName=`, or `PodName=` keys if a specific Podman object name is requested.
+  - Run `lab exam check-reboot` to verify Quadlet/firewall/linger boot persistence; if you perform a full `sudo systemctl reboot` before `lab exam grade`, ensure non-Quadlet containers were started with `--restart=always` (with `systemctl --user enable podman-restart.service`) or start them again before running `lab exam grade`.
+
 ---
 ### Task 01 (10 pts) - Registry trust and insecure HTTP registry
 Trust `/opt/ex188-lab/certs/ca.crt` for `secure-reg.lab.local:5443` and `auth-reg.lab.local:5444` under `/etc/containers/certs.d/`, and mark `registry.lab.local:5000` insecure in `/etc/containers/registries.conf.d/50-m04.conf`.
@@ -20,7 +25,7 @@ Save the output of `podman search --list-tags registry.lab.local:5000/m04-seed/t
 Promote `registry.lab.local:5000/m04-seed/tool:2.0` to `secure-reg.lab.local:5443/m04/tool:2.0` using pull, tag, push.
 
 ### Task 05 (20 pts) - Build the voting images
-Using `/home/student/apps/stack-voting` (read its README), build `localhost/m04-vote-api:1.0` and `localhost/m04-vote-ui:1.0` with the vendor Containerfiles.
+Using `/home/student/workspace/m04/voting-src (pre-staged from /home/student/apps/stack-voting)` (read its README), build `localhost/m04-vote-api:1.0` and `localhost/m04-vote-ui:1.0` with the vendor Containerfiles.
 
 ### Task 06 (15 pts) - Build-time secret
 In `m04/secret-build/` build `localhost/m04-secret-build:1.0` that stores only the SHA256 of `m04/build.key` in `/etc/bkey.sha256`, using `--secret`/`RUN --mount=type=secret`. The raw key must not appear in `podman history --no-trunc`.

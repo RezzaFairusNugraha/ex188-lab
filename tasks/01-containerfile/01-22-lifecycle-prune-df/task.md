@@ -1,10 +1,10 @@
-# Task 01-22: Container and Image Lifecycle Cleanup: Prune and podman system df
+# Task 01-22: Pruning Stopped Containers and Dangling Images Safely
 
-## Scenario
-Setup created exited containers (`exited-job-1`, `exited-job-2`), dangling `<none>:<none>` build layers, and one active container (`keep-alive-svc`) that **must remain running**.
+## Objective
+Clean up stopped containers and untagged dangling build layers on the workstation while keeping active services running.
 
-## Requirements
-1. Without stopping or removing `keep-alive-svc`:
-   - Remove all stopped/exited containers (`podman container prune -f`).
-   - Remove all dangling untagged images (`podman image prune -f`).
-2. Save the output of `podman system df` after cleanup to `/home/student/workspace/01-22/system-df.txt`.
+## Specification
+As user `student`:
+1. Keep running container `keep-alive-svc` active and untouched.
+2. Remove all stopped/exited containers (`exited-job-1`, `exited-job-2`) and prune all dangling (`<none>`) images from local storage.
+3. Save the output of `podman system df` after cleanup to `/home/student/workspace/01-22/system-df.txt`.

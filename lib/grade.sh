@@ -166,6 +166,10 @@ assert_container_healthy() {
     local pts="$1" cname="$2" desc="${3:-Container '${2}' health status is healthy}"
     local health
     health="$(podman container inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${cname}" 2>/dev/null || true)"
+    if [[ "${health}" == "starting" ]]; then
+        podman healthcheck run "${cname}" >/dev/null 2>&1 || true
+        health="$(podman container inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${cname}" 2>/dev/null || true)"
+    fi
     if [[ "${health}" == "healthy" ]]; then
         pass_check "${pts}" "${desc}"
     else
@@ -239,10 +243,18 @@ assert_container_mount() {
 assert_http_ok() {
     local pts="$1" url="$2" regex="${3:-}" expected_code="${4:-200}"
     local desc="HTTP endpoint ${url} returns ${expected_code}"
-    local tmp_body
+    local tmp_body code attempt
     tmp_body="$(mktemp)"
-    local code
-    code="$(curl -ksS -o "${tmp_body}" -w '%{http_code}' --max-time 5 "${url}" 2>/dev/null || printf '000')"
+    code="000"
+    for attempt in 1 2 3 4 5 6; do
+        code="$(curl -ksS -o "${tmp_body}" -w '%{http_code}' --max-time 5 "${url}" 2>/dev/null || printf '000')"
+        if [[ "${code}" == "${expected_code}" ]]; then
+            if [[ -z "${regex}" ]] || grep -Eq "${regex}" "${tmp_body}"; then
+                break
+            fi
+        fi
+        sleep 0.5
+    done
     if [[ "${code}" != "${expected_code}" ]]; then
         rm -f "${tmp_body}"
         fail_check "${pts}" "${desc}" "HTTP status was ${code} (expected ${expected_code})"
@@ -308,11 +320,24 @@ assert_service_persistent() {
     if [[ "${enabled}" == "generated" || "${enabled}" == "transient" ]]; then
         local src_path
         src_path="$("${ctl[@]}" show -p SourcePath --value "${unit}" 2>/dev/null || true)"
-        if [[ -n "${src_path}" && -f "${src_path}" ]] && grep -Eq '^[[:space:]]*WantedBy=' "${src_path}"; then
-            pass_check "${pts}" "${desc}"
-            return
+        if [[ -n "${src_path}" ]]; then
+            if [[ "${scope}" == "user" ]]; then
+                if [[ -f "${src_path}" ]] && grep -Eq '^[[:space:]]*WantedBy=(default|timers)\.target([[:space:]]|$)' "${src_path}" 2>/dev/null; then
+                    pass_check "${pts}" "${desc}"
+                    return
+                fi
+                fail_check "${pts}" "${desc}" "User Quadlet '${unit}' requires 'WantedBy=default.target' under [Install] in '${src_path}'"
+                return
+            else
+                if run_privileged grep -Eq '^[[:space:]]*WantedBy=(multi-user|default)\.target([[:space:]]|$)' "${src_path}" 2>/dev/null; then
+                    pass_check "${pts}" "${desc}"
+                    return
+                fi
+                fail_check "${pts}" "${desc}" "System Quadlet '${unit}' requires 'WantedBy=multi-user.target' under [Install] in '${src_path}'"
+                return
+            fi
         fi
-        fail_check "${pts}" "${desc}" "Quadlet unit '${unit}' is active (${enabled}) but '${src_path:-Quadlet file}' lacks WantedBy= under [Install]"
+        fail_check "${pts}" "${desc}" "Quadlet unit '${unit}' is active (${enabled}) but lacks WantedBy= under [Install]"
         return
     fi
 
@@ -328,7 +353,7 @@ assert_registry_image() {
         cmd+=("${flags_arr[@]}")
     fi
     cmd+=("docker://${ref}")
-    if "${cmd[@]}" >/dev/null 2>&1; then
+    if "${cmd[@]}" >/dev/null 2>&1 || podman manifest inspect --authfile "$(student_home)/.config/containers/auth.json" "docker://${ref}" >/dev/null 2>&1 || podman manifest inspect "docker://${ref}" >/dev/null 2>&1; then
         pass_check "${pts}" "${desc}"
     else
         fail_check "${pts}" "${desc}" "remote image '${ref}' was not found or accessible in the registry"
@@ -361,3 +386,5 @@ grade_finish() {
         return 1
     fi
 }
+
+export -f pass_check fail_check check_cmd assert_file_exists assert_dir_exists assert_file_contains assert_file_not_contains assert_selinux_type assert_image_exists assert_image_user assert_container_running assert_container_healthy assert_container_port assert_container_env assert_container_mount assert_http_ok assert_firewall_port assert_user_linger assert_service_persistent assert_registry_image

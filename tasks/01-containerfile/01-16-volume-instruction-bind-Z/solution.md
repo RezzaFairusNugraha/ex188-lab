@@ -1,5 +1,6 @@
 ## Solution
 ```bash
+# Note: setup already pre-stages vendor files in the workspace directory
 cp -r /home/student/apps/webapp-flask/. /home/student/workspace/01-16/
 mkdir -p /home/student/workspace/01-16/host-notes
 

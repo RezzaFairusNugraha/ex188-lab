@@ -20,7 +20,7 @@ podman run -d --name prod-keeper -v prod-keeper-vol:/data registry.access.redhat
 podman volume create orphan-vol-1 >/dev/null
 podman run --name junk-crash-1 -v orphan-vol-1:/junk registry.access.redhat.com/ubi10/ubi-minimal:latest \
     sh -c 'dd if=/dev/zero of=/junk/dump1.bin bs=1M count=50 2>/dev/null; dd if=/dev/zero of=/var/tmp/core1.bin bs=1M count=50 2>/dev/null'
-podman rm -f junk-crash-1 >/dev/null # leaves orphan-vol-1 with 50MB!
+podman rm -f junk-crash-1 >/dev/null 2>&1 || true # leaves orphan-vol-1 with 50MB!
 podman run --name junk-crash-2 registry.access.redhat.com/ubi10/ubi-minimal:latest \
     sh -c 'dd if=/dev/zero of=/var/tmp/core2.bin bs=1M count=50 2>/dev/null'
 
@@ -28,5 +28,6 @@ cat > "${WORK}/b/Containerfile" <<'EOF'
 FROM registry.access.redhat.com/ubi10/ubi-minimal:latest
 RUN dd if=/dev/zero of=/var/tmp/bloat.bin bs=1M count=60 2>/dev/null
 EOF
+# build helper
 podman build -q -t localhost/bloated-junk:old "${WORK}/b" >/dev/null
-rm -rf "${WORK}"
+rm -rf "${WORK}/b"

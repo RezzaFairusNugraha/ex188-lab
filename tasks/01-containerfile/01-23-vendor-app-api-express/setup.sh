@@ -10,6 +10,6 @@ seed_port "01-23" HOST_PORT 3023 13020 13099
 
 WORK="$(student_home)/workspace/01-23"
 rm -rf "${WORK}"
-mkdir -p "${WORK}"
+stage_vendor_app api-express "${WORK}"
 podman rm -f northwind-prod >/dev/null 2>&1 || true
 podman rmi -f "localhost/northwind-api:${IMG_TAG}" >/dev/null 2>&1 || true

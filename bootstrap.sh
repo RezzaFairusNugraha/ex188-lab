@@ -36,17 +36,24 @@ PACKAGES=(
     policycoreutils-python-utils
     container-selinux
     systemd-container
+    python3
+    python3-pip
+    python3-pyyaml
 )
 
 log_info "Installing required packages via dnf..."
 run_privileged dnf install -y "${PACKAGES[@]}"
 
-# Install podman-compose if available in configured repositories (EPEL / AppStream)
+# Ensure podman-compose is installed (via AppStream/EPEL 10 or pip fallback)
 if ! command -v podman-compose >/dev/null 2>&1; then
     if run_privileged dnf list --available podman-compose >/dev/null 2>&1; then
         run_privileged dnf install -y podman-compose
+    elif run_privileged dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm >/dev/null 2>&1         && run_privileged dnf install -y podman-compose >/dev/null 2>&1; then
+        log_ok "Installed podman-compose via EPEL 10."
+    elif python3 -m pip install --break-system-packages -q podman-compose >/dev/null 2>&1         || run_privileged python3 -m pip install -q podman-compose >/dev/null 2>&1; then
+        log_ok "Installed podman-compose via pip."
     else
-        log_warn "podman-compose not in active repos; enable EPEL 10 ('dnf install -y epel-release') if Compose tasks require it."
+        log_warn "Could not install podman-compose automatically (offline without EPEL)."
     fi
 fi
 
@@ -69,8 +76,11 @@ log_info "Configuring passwordless sudo for 'student' (required for rootful/fire
 printf 'student ALL=(ALL) NOPASSWD: ALL\n' | run_privileged tee /etc/sudoers.d/90-ex188-student >/dev/null
 run_privileged chmod 0440 /etc/sudoers.d/90-ex188-student
 
-log_info "Enabling systemd user linger for 'student'..."
+log_info "Enabling systemd user linger and podman-restart services..."
 run_privileged loginctl enable-linger student
+run_privileged systemctl enable podman-restart.service >/dev/null 2>&1 || true
+getent group devshare >/dev/null 2>&1 || run_privileged groupadd -g 2460 devshare
+run_privileged usermod -aG devshare student >/dev/null 2>&1 || true
 
 # 3. Install lab suite to /opt/ex188-lab and expose `lab` CLI globally + in ~/bin
 INSTALL_DIR="/opt/ex188-lab"
@@ -93,6 +103,7 @@ run_privileged rm -rf "${STUDENT_HOME}/apps"
 run_privileged cp -a "${INSTALL_DIR}/apps" "${STUDENT_HOME}/apps"
 run_privileged chown -R root:root "${STUDENT_HOME}/apps"
 run_privileged chmod -R a+rX,u+w,go-w "${STUDENT_HOME}/apps"
+run_privileged chcon -Rt container_file_t "${STUDENT_HOME}/apps" >/dev/null 2>&1 || true
 run_privileged chown -R student:student "${STUDENT_HOME}/bin" "${STUDENT_HOME}/workspace"
 
 # 4. Start local container registries (:5000 HTTP, :5443 TLS, :5444 TLS+Auth)

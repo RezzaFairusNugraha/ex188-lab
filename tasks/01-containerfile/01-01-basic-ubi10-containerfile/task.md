@@ -1,9 +1,9 @@
 # Task 01-01: Authoring a Clean UBI10 Containerfile with Pinned Base Tag
 
-## Scenario
+## Objective
 Your team is standardizing base web images on Red Hat Universal Base Image 10 (`ubi10`). A static `index.html` file has been placed in `/home/student/workspace/01-01/`.
 
-## Requirements
+## Specification
 As user `student`:
 1. Create `/home/student/workspace/01-01/Containerfile` (never name it `Dockerfile`) using `registry.access.redhat.com/ubi10/ubi:latest` as the `FROM` base image.
 2. Install `httpd` via `dnf` and clean package metadata in the same `RUN` instruction.

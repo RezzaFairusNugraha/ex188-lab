@@ -1,9 +1,9 @@
 # Task 04-15: Multi-Container Pod Managed by a Quadlet .pod Unit Across Reboot
 
-## Scenario
+## Objective
 Podman v5 introduced first-class **`.pod` Quadlet units**! Member `.container` files join the pod via `Pod=<name>.pod`, while port publishing lives on the `.pod` unit itself (`<name>-pod.service`).
 
-## Requirements
+## Specification
 Inside `/home/student/.config/containers/systemd/`:
 1. Create `telemetry-stack.pod`:
    - `[Pod]` `PodName=telemetry-stack` and `PublishPort=8415:8080`

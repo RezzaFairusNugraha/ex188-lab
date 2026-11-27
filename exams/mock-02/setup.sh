@@ -8,7 +8,9 @@ bash "${EXAM_DIR}/reset.sh" >/dev/null 2>&1 || true
 registry_start_all
 SHOME="$(student_home)"
 WORK="${SHOME}/workspace/m02"
-mkdir -p "${WORK}/seed-dir" "${WORK}/legacy-cf" "${WORK}/se-data"
+mkdir -p "${WORK}/seed-dir" "${WORK}/legacy-cf" "${WORK}/se-data" "${WORK}/sec-build"
+stage_vendor_app worker-py "${WORK}/worker-build"
+stage_vendor_app api-express "${WORK}/api-build"
 
 # Seed mirror image in :5443
 run_privileged mkdir -p "/etc/containers/certs.d/${REG_TLS_HOST}"

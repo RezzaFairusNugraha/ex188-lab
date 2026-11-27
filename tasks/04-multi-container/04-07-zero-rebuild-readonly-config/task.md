@@ -1,9 +1,9 @@
 # Task 04-07: Externalized Read-Only Config Override Without Rebuilding the Image
 
-## Scenario
+## Objective
 Read `/home/student/apps/static-portal/README.md`. Pre-built image `localhost/static-portal:1.0` bakes in default `config.js` (`banner: "Default Vendor Configuration"`). Without rebuilding or modifying the image, override `config.js` at runtime!
 
-## Requirements
+## Specification
 1. Do **not** rebuild `localhost/static-portal:1.0`.
 2. Create `/home/student/workspace/04-07/prod-config.js` (`chmod 0644`) setting:
    ```javascript

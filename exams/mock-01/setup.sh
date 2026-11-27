@@ -8,7 +8,11 @@ bash "${EXAM_DIR}/reset.sh" >/dev/null 2>&1 || true
 registry_start_all
 SHOME="$(student_home)"
 WORK="${SHOME}/workspace/m01"
-mkdir -p "${WORK}/broken-126"
+mkdir -p "${WORK}/broken-126" "${WORK}/compose-stack"
+stage_vendor_app static-portal "${WORK}/portal-build"
+stage_vendor_app webapp-flask "${WORK}/flask-build"
+stage_vendor_app metrics-go "${WORK}/metrics-build"
+stage_vendor_app api-express "${WORK}/api-build"
 
 # Seed base image in :5000 and repo in :5444
 podman tag registry.access.redhat.com/ubi10/ubi-minimal:latest "${REG_INSECURE_HOST}/m01-seed/ubi-base:1.0"

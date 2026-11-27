@@ -191,10 +191,12 @@ cmd_start() {
     hr
 
     export LAB_SEED="${seed_val}"
+    registry_ensure_running
     log_info "Running environment setup for task ${tid}..."
     bash "${tdir}/setup.sh"
     state_set_current_task "${tid}"
     cp "${tdir}/task.md" "${LAB_DATA_DIR}/current-task.md"
+    chown "$(student_user):$(student_user)" "${LAB_DATA_DIR}/current-task.md" 2>/dev/null || true
 
     printf '\n'
     cat "${tdir}/task.md"

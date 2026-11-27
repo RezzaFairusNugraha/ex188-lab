@@ -1,13 +1,12 @@
-# Task 01-05: Setting File Ownership and Permissions During COPY (--chown and --chmod)
+# Task 01-05: Setting File Ownership and Permissions During Image Copy
 
-## Scenario
-Copying a large file and running `RUN chown` in a later layer duplicates every byte in a second image layer. Modern `Containerfile` syntax sets ownership and mode directly during `COPY`.
+## Objective
+As user `student`, package the pre-staged application files in `/home/student/workspace/01-05/` into a non-root container image without creating extra `RUN chown` or `RUN chmod` layers.
 
-## Requirements
-In `/home/student/workspace/01-05/`:
-1. Author `Containerfile` starting from `registry.access.redhat.com/ubi10/ubi-minimal:latest`.
-2. Without using `RUN chown` or `RUN chmod`:
-   - Copy `launcher.sh` to `/opt/app/launcher.sh` owned by `1001:1001` with mode `0755`.
-   - Copy `settings.ini` to `/opt/app/settings.ini` owned by `1001:1001` with mode `0640`.
-3. Set `USER 1001`, `WORKDIR /opt/app`, and `CMD ["/opt/app/launcher.sh"]`.
-4. Build the image as `localhost/chown-demo:1.0`.
+## Specification
+Create `/home/student/workspace/01-05/Containerfile` and build `localhost/chown-demo:1.0` meeting all of the following criteria:
+1. Base image: `registry.access.redhat.com/ubi10/ubi-minimal:latest`.
+2. Working directory: `/opt/app`.
+3. Copy `launcher.sh` to `/opt/app/launcher.sh` owned by UID:GID `1001:1001` with permissions `0755` — **without** using `RUN chown` or `RUN chmod`.
+4. Copy `settings.ini` to `/opt/app/settings.ini` owned by UID:GID `1001:1001` with permissions `0640` — **without** using `RUN chown` or `RUN chmod`.
+5. Configure the container to execute as numeric user `1001` with default exec-form command `["/opt/app/launcher.sh"]`.

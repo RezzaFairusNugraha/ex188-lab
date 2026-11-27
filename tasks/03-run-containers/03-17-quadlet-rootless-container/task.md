@@ -1,11 +1,11 @@
 # Task 03-17: Persistent Rootless Service with Quadlet (.container) and Lingering
 
-## Scenario
+## Objective
 On RHEL 10 with Podman v5, **Quadlet** (`~/.config/containers/systemd/*.container`) is the standard, exam-tested way to run containers as reboot-persistent systemd services!
 
 > **CRITICAL Podman v5 Quadlet Rule**: Generated Quadlet units cannot be enabled with `systemctl --user enable <name>.service` (`unit is transient or generated`). Instead, adding `WantedBy=default.target` under `[Install]` inside the `.container` file causes `podman-system-generator` to wire boot auto-start automatically upon `systemctl --user daemon-reload`!
 
-## Requirements
+## Specification
 As user `student`:
 1. Create `/home/student/.config/containers/systemd/portal-quad.container` running:
    - `Image=quay.io/nginx/nginx-unprivileged:1.26-alpine`

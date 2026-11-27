@@ -1,9 +1,9 @@
 # Task 04-08: Two-Tier Web and PostgreSQL Deployment via compose.yaml and .env Interpolation
 
-## Scenario
+## Objective
 Deploy `webapp-flask` (`localhost/webapp-0408:1.0`, pre-built) backed by PostgreSQL 16 (`quay.io/sclorg/postgresql-16-c10s:latest`) using `podman compose` (`podman-compose`) with variable interpolation from `/home/student/workspace/04-08/.env`.
 
-## Requirements
+## Specification
 In `/home/student/workspace/04-08/`:
 1. Create `.env` setting `PUBLISHED_PORT=8408`, `PG_USER=appdb`, `PG_PASS=composepass88`, and `PG_NAME=portaldb`.
 2. Create `compose.yaml` defining:

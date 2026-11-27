@@ -14,4 +14,4 @@ podman volume rm -f acme-notes-vol acme-db-vol >/dev/null 2>&1 || true
 podman secret rm acme_sign_key >/dev/null 2>&1 || true
 podman rmi -f localhost/acme-full:1.0 >/dev/null 2>&1 || true
 rm -rf "${WORK}"
-mkdir -p "${WORK}/build"
+stage_vendor_app webapp-flask "${WORK}/build"

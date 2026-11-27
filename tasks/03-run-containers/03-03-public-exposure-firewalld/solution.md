@@ -2,7 +2,7 @@
 ```bash
 podman run -d --name edge-portal \
   -p 0.0.0.0:8883:8080 \
-  -v /home/student/apps/static-portal/public:/usr/share/nginx/html:ro,z \
+  -v /home/student/workspace/03-03/public:/usr/share/nginx/html:ro,z \
   quay.io/nginx/nginx-unprivileged:1.26-alpine
 
 sudo firewall-cmd --permanent --add-port=8883/tcp

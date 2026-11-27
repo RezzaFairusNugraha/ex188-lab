@@ -1,8 +1,9 @@
-# Task 05-07: Fixing Bind-Mount Permission Denied Despite Mode 0777 (Missing SELinux Label)
+# Task 05-07: Troubleshooting Bind-Mount Write Failure Under Enforcing SELinux
 
-## Scenario
-A junior admin ran `chmod 0777 /home/student/workspace/05-07/data` to fix a write failure on `selinux-victim`, yet `curl http://127.0.0.1:8507/healthz` STILL returns `503` (`PermissionError: [Errno 13] Permission denied`)!
+## Objective
+Container `selinux-victim` (`localhost/ts-web-0507:1.0`, running as `USER 1001` on `-p 8507:8080`) fails health checks (`503` on `http://127.0.0.1:8507/healthz`) with `Permission denied` on `/var/lib/webapp/data`, even though a previous operator set `/home/student/workspace/05-07/data` to `0777`.
 
-## Requirements
-1. Do **not** disable SELinux (`setenforce 0` is strictly forbidden and fails grading!) and do **not** pass `--security-opt label=disable`.
-2. Tighten `/home/student/workspace/05-07/data` permissions back from insecure `0777` to `0755` (using `--userns=keep-id:uid=1001,gid=1001`) and fix the bind mount on `selinux-victim` (`-p 8507:8080`) with proper SELinux relabeling (`:Z`) so `/healthz` (`CHECK_STORAGE=1`) returns `200 OK`!
+## Specification
+1. Keep host SELinux in **Enforcing** mode and keep container SELinux confinement enabled (`setenforce 0` and `label=disable` are prohibited).
+2. Restore secure `0755` permissions on `/home/student/workspace/05-07/data` (do not leave it `0777`).
+3. Recreate `selinux-victim` on `-p 8507:8080` (`APP_ENV=production`, `CHECK_STORAGE=1`) mounting `/home/student/workspace/05-07/data` at `/var/lib/webapp/data` with proper SELinux labeling and rootless UID mapping so `http://127.0.0.1:8507/healthz` returns `200 OK` (`"storage": "writable"`).
