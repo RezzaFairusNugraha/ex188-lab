@@ -145,8 +145,6 @@ registry_ensure_running() {
     fi
 }
 
-export -f registry_generate_certs_and_auth registry_ensure_hosts registry_start_all registry_ensure_running registry_status
-
 registry_status() {
     local c
     for c in ex188-reg-http ex188-reg-tls ex188-reg-auth; do
@@ -155,3 +153,5 @@ registry_status() {
         printf '  %-18s : %s\n' "${c}" "${st}"
     done
 }
+
+export -f registry_generate_certs_and_auth registry_ensure_hosts registry_start_all registry_ensure_running registry_status

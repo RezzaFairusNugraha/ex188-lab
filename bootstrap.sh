@@ -50,7 +50,7 @@ if ! command -v podman-compose >/dev/null 2>&1; then
         run_privileged dnf install -y podman-compose
     elif run_privileged dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm >/dev/null 2>&1         && run_privileged dnf install -y podman-compose >/dev/null 2>&1; then
         log_ok "Installed podman-compose via EPEL 10."
-    elif python3 -m pip install --break-system-packages -q podman-compose >/dev/null 2>&1         || run_privileged python3 -m pip install -q podman-compose >/dev/null 2>&1; then
+    elif run_privileged python3 -m pip install --break-system-packages -q podman-compose >/dev/null 2>&1 || run_privileged python3 -m pip install -q podman-compose >/dev/null 2>&1; then
         log_ok "Installed podman-compose via pip."
     else
         log_warn "Could not install podman-compose automatically (offline without EPEL)."
@@ -91,7 +91,7 @@ if [[ "${SCRIPT_DIR}" != "${INSTALL_DIR}" ]]; then
 fi
 
 run_privileged chmod +x "${INSTALL_DIR}/bin/lab" "${INSTALL_DIR}/bootstrap.sh" "${INSTALL_DIR}/prefetch-images.sh"
-find "${INSTALL_DIR}/tasks" "${INSTALL_DIR}/exams" "${INSTALL_DIR}/lib" -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
+run_privileged find "${INSTALL_DIR}/tasks" "${INSTALL_DIR}/exams" "${INSTALL_DIR}/lib" -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
 
 run_privileged ln -sf "${INSTALL_DIR}/bin/lab" /usr/local/bin/lab
 STUDENT_HOME="$(getent passwd student | cut -d: -f6)"
